@@ -2,12 +2,13 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/wrtgvr/urlshrt/internal/handlers"
 )
 
-func RegisterRoutes() *gin.Engine {
+func RegisterRoutes(h *handlers.Handler) *gin.Engine {
 	r := gin.Default()
 
-	registerShortUrls(r)
+	registerShortUrls(h, r)
 
 	return r
 }

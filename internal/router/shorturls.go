@@ -5,6 +5,6 @@ import (
 	"github.com/wrtgvr/urlshrt/internal/handlers"
 )
 
-func registerShortUrls(r *gin.Engine) {
-	r.GET("/r/:shorturl", handlers.ShortUrls)
+func registerShortUrls(h *handlers.Handler, r *gin.Engine) {
+	r.GET("/r/:shrturl", h.ShortUrlsHandler)
 }

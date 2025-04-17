@@ -6,8 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func ShortUrls(c *gin.Context) {
-	shortUrl := c.Param("shorturl")
+func (h *Handler) ShortUrlsHandler(c *gin.Context) {
+	shortUrl := c.Param("shrturl")
 
 	url := shortUrl
 	// search for shortUrl in DB if shortUrl exists then get actual url and redirect
