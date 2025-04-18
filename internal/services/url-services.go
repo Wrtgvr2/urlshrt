@@ -7,3 +7,7 @@ import (
 type UrlServices struct {
 	Repo rep.UrlRepo
 }
+
+func NewUrlServices(repo rep.UrlRepo) UrlServices {
+	return UrlServices{Repo: repo}
+}

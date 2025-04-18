@@ -7,10 +7,11 @@ import (
 	"github.com/wrtgvr/urlshrt/internal/handlers"
 	rep "github.com/wrtgvr/urlshrt/internal/repository"
 	"github.com/wrtgvr/urlshrt/internal/services"
+	"gorm.io/gorm"
 )
 
 type App struct {
-	Handler handlers.Handler
+	Handler *handlers.Handler
 }
 
 func InitApp() *App {
@@ -18,18 +19,22 @@ func InitApp() *App {
 		log.Fatal(err)
 	}
 
-	rep.InitDatabase()
-
-	h := handlers.Handler{
-		UserServices: services.UserServices{
-			Repo: rep.PostgresUserRepo{},
-		},
-		UrlServices: services.UrlServices{
-			Repo: rep.PostgresUlrRepo{},
-		}, // TODO: Make a constructor functions for handler and services
-	}
+	db := rep.InitDatabase()
+	h := initHandler(db)
 
 	return &App{
 		Handler: h,
 	}
+}
+
+func initHandler(db *gorm.DB) *handlers.Handler {
+	userRepo := rep.NewPostgresUserRepo(db)
+	urlRepo := rep.NewPostgresUrlRepo(db)
+
+	userServices := services.NewUserServices(userRepo)
+	urlServices := services.NewUrlServices(urlRepo)
+
+	h := handlers.NewHandler(&userServices, &urlServices)
+
+	return h
 }
