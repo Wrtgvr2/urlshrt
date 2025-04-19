@@ -1,6 +1,13 @@
 package services
 
 import (
+	"errors"
+	"net/http"
+
+	"github.com/wrtgvr/urlshrt/internal/apperrors"
+	models_http "github.com/wrtgvr/urlshrt/internal/models/http"
+	"github.com/wrtgvr/urlshrt/internal/pkg/hash"
+	"github.com/wrtgvr/urlshrt/internal/pkg/jwt"
 	rep "github.com/wrtgvr/urlshrt/internal/repository"
 )
 
@@ -12,11 +19,17 @@ func NewUserServices(repo rep.UserRepo) UserServices {
 	return UserServices{Repo: repo}
 }
 
-func (s *UserServices) Login() {
-	// Get user my username
-	// if no user - return err
-	// if user exists check given password with hash in DB
-	// if it's ok then create tokens and return it
-	// that's all(?)
-	//s.Repo.GetUserByUsername()
+func (s *UserServices) Login(userReq models_http.UserRequest) (string, string, *apperrors.AppError) {
+	user, appErr := s.Repo.GetUserByUsername(userReq.Username)
+	if appErr != nil {
+		return "", "", appErr
+	}
+	if passwordCorrect := hash.CheckPasswordHash(userReq.Password, user.PasswordHash); !passwordCorrect {
+		return "", "", apperrors.WrapError(errors.New("password mismatch"), http.StatusUnauthorized, "password mismatch")
+	}
+	accessToken, refreshToken, err := jwt.CreateTokens(user.ID)
+	if err != nil {
+		return "", "", apperrors.WrapError(err, http.StatusInternalServerError, "internal server error")
+	}
+	return accessToken, refreshToken, nil
 }
