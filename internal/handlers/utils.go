@@ -4,22 +4,31 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/wrtgvr/urlshrt/internal/apperrors"
 )
 
-func HandleError(c *gin.Context, err error, code int) bool {
-	if err == nil {
+func HandleError(c *gin.Context, appErr *apperrors.AppError) bool {
+	if appErr == nil {
 		return false
 	}
 
-	msg := err.Error()
+	msg := appErr.Message
 
-	if code == http.StatusInternalServerError {
+	if appErr.StatusCode == http.StatusInternalServerError {
 		msg = http.StatusText(http.StatusInternalServerError)
 	}
 
-	c.JSON(code, gin.H{
+	c.JSON(appErr.StatusCode, gin.H{
 		"error": msg,
 	})
 
 	return true
+}
+
+func DecodeBody(c *gin.Context, obj any) *apperrors.AppError {
+	err := c.ShouldBindJSON(&obj)
+	if err != nil {
+		return apperrors.WrapError(err, http.StatusBadRequest, "invalid credentials")
+	}
+	return nil
 }
