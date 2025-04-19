@@ -25,7 +25,11 @@ func InitDatabase() *gorm.DB {
 		log.Fatal(err)
 	}
 
-	err = db.AutoMigrate(&models_db.User{}, &models_db.URL{})
+	err = db.AutoMigrate(
+		&models_db.User{},
+		&models_db.URL{},
+		&models_db.RefreshToken{},
+	)
 	if err != nil {
 		log.Fatal(err)
 	}
