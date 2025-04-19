@@ -7,7 +7,7 @@ import (
 
 func main() {
 	App := app.InitApp()
-	r := router.RegisterRoutes(&App.Handler)
+	r := router.RegisterRoutes(App.Handler)
 
 	r.Run(":8080")
 }
