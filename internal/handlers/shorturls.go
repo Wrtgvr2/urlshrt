@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (h *Handler) ShortUrlsHandler(c *gin.Context) {
+func (h *Handler) RedirectHandler(c *gin.Context) {
 	shortUrl := c.Param("shrturl")
 
 	url := shortUrl
