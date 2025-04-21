@@ -11,8 +11,7 @@ import (
 func (h *Handler) LoginHandler(c *gin.Context) {
 	req := models_http.UserRequest{}
 	appErr := DecodeBody(c, req)
-	if appErr != nil {
-		ginadap.HandleError(c, appErr)
+	if ginadap.HandleError(c, appErr) {
 		return
 	}
 
