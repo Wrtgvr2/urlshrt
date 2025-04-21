@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 
-	_ "github.com/lib/pq"
 	models_db "github.com/wrtgvr/urlshrt/internal/models/db"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
