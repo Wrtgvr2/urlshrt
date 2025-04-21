@@ -6,5 +6,9 @@ import (
 )
 
 func registerShortUrls(h *handlers.Handler, r *gin.Engine) {
-	r.GET("/r/:shrturl", h.ShortUrlsHandler)
+	group := r.Group("r")
+	{
+		group.GET("/:shrturl", h.RedirectHandler)
+		//group.POST("/shorten", h.ShortenHandler)
+	}
 }
