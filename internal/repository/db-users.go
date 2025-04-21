@@ -1,10 +1,8 @@
 package repository
 
 import (
-	"net/http"
-
-	"github.com/wrtgvr/urlshrt/internal/apperrors"
 	models_db "github.com/wrtgvr/urlshrt/internal/models/db"
+	"github.com/wrtgvr2/errsuit"
 	"gorm.io/gorm"
 )
 
@@ -16,14 +14,14 @@ func NewPostgresUserRepo(db *gorm.DB) *PostgresUserRepo {
 	return &PostgresUserRepo{DB: db}
 }
 
-func (p *PostgresUserRepo) GetUserByUsername(username string) (*models_db.User, *apperrors.AppError) {
+func (p *PostgresUserRepo) GetUserByUsername(username string) (*models_db.User, *errsuit.AppError) {
 	var user models_db.User
 	res := p.DB.First(&user, "username = ?", username)
 	if res.Error != nil {
 		if res.Error == gorm.ErrRecordNotFound {
-			return nil, apperrors.WrapError(res.Error, http.StatusNotFound, "user not found")
+			return nil, errsuit.NewNotFound("user not found", res.Error, false)
 		}
-		return nil, apperrors.WrapError(res.Error, http.StatusInternalServerError, "internal server error")
+		return nil, errsuit.NewInternal("DB error:", res.Error, true)
 	}
 
 	return &user, nil

@@ -5,17 +5,19 @@ import (
 
 	"github.com/gin-gonic/gin"
 	models_http "github.com/wrtgvr/urlshrt/internal/models/http"
+	"github.com/wrtgvr2/errsuit/drivers/ginadap"
 )
 
 func (h *Handler) LoginHandler(c *gin.Context) {
 	req := models_http.UserRequest{}
 	appErr := DecodeBody(c, req)
-	if HandleError(c, appErr) {
+	if appErr != nil {
+		ginadap.HandleError(c, appErr)
 		return
 	}
 
 	accessToken, refreshToken, err := h.UserServices.Login(req)
-	if HandleError(c, err) {
+	if ginadap.HandleError(c, err) {
 		return
 	}
 
