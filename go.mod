@@ -3,7 +3,7 @@ module github.com/wrtgvr/urlshrt
 go 1.24.0
 
 require (
-	github.com/wrtgvr2/errsuit v0.0.0-20250420132211-0fff195aac98
+	github.com/wrtgvr2/errsuit v0.0.2
 	gorm.io/gorm v1.25.12
 )
 
