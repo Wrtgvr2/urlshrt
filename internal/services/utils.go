@@ -4,6 +4,7 @@ import (
 	models_db "github.com/wrtgvr/urlshrt/internal/models/db"
 	models_http "github.com/wrtgvr/urlshrt/internal/models/http"
 	"github.com/wrtgvr/urlshrt/internal/pkg/hash"
+	"github.com/wrtgvr/urlshrt/internal/validation"
 	"github.com/wrtgvr2/errsuit"
 )
 
@@ -24,4 +25,16 @@ func convertUserReqToUserDb(userReq *models_http.UserRequest) (*models_db.User, 
 	}
 
 	return &userData, nil
+}
+
+func ValidateUserData(username, password string) *errsuit.AppError {
+	err := validation.ValidateUsername(username)
+	if err != nil {
+		return err
+	}
+	err = validation.ValidatePassword(password)
+	if err != nil {
+		return err
+	}
+	return nil
 }
