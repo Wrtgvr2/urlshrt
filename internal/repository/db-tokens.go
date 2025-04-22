@@ -12,11 +12,8 @@ type PostgresRefreshToken struct {
 
 func (p *PostgresRefreshToken) CreateRefreshTokenInfo(tokenData *models_db.RefreshToken) (*models_db.RefreshToken, *errsuit.AppError) {
 	res := p.DB.Create(tokenData)
-	if res.Error != nil {
-		return nil, errsuit.NewInternal("DB error:", res.Error, true)
-	}
-	if res.RowsAffected == 0 {
-		return nil, errsuit.NewInternal("DB error:", res.Error, true)
+	if res.Error != nil || res.RowsAffected == 0 {
+		return nil, errsuit.NewInternal("unable to create token info", res.Error, true)
 	}
 
 	return tokenData, nil
