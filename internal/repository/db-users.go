@@ -21,7 +21,17 @@ func (p *PostgresUserRepo) GetUserByUsername(username string) (*models_db.User, 
 		if res.Error == gorm.ErrRecordNotFound {
 			return nil, errsuit.NewNotFound("user not found", res.Error, false)
 		}
-		return nil, errsuit.NewInternal("DB error:", res.Error, true)
+		return nil, errsuit.NewInternal("DB error", res.Error, true)
+	}
+
+	return &user, nil
+}
+
+func (p *PostgresUserRepo) CreateUser(userData *models_db.User) (*models_db.User, *errsuit.AppError) {
+	user := *userData
+	res := p.DB.Select("*").Create(&user)
+	if res.Error != nil || res.RowsAffected == 0 {
+		return nil, errsuit.NewInternal("unable to create user", res.Error, true)
 	}
 
 	return &user, nil

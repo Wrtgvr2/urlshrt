@@ -7,6 +7,7 @@ import (
 
 type UserRepo interface {
 	GetUserByUsername(string) (*models_db.User, *errsuit.AppError)
+	CreateUser(*models_db.User) (*models_db.User, *errsuit.AppError)
 }
 
 type UrlRepo interface{}
