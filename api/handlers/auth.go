@@ -10,7 +10,7 @@ import (
 
 func (h *Handler) LoginHandler(c *gin.Context) {
 	req := models_http.UserRequest{}
-	appErr := DecodeBody(c, req)
+	appErr := DecodeBody(c, &req)
 	if ginadap.HandleError(c, appErr) {
 		return
 	}
@@ -28,9 +28,15 @@ func (h *Handler) LoginHandler(c *gin.Context) {
 
 func (h *Handler) RegisterHandler(c *gin.Context) {
 	req := models_http.UserRequest{}
-	appErr := DecodeBody(c, req)
+	appErr := DecodeBody(c, &req)
 	if ginadap.HandleError(c, appErr) {
 		return
 	}
 
+	user, err := h.UserServices.Register(&req)
+	if ginadap.HandleError(c, err) {
+		return
+	}
+
+	c.JSON(http.StatusCreated, user)
 }
