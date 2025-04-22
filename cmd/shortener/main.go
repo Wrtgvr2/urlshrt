@@ -1,8 +1,8 @@
 package main
 
 import (
+	"github.com/wrtgvr/urlshrt/api/router"
 	"github.com/wrtgvr/urlshrt/internal/app"
-	"github.com/wrtgvr/urlshrt/internal/router"
 )
 
 func main() {
