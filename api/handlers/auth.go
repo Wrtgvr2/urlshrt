@@ -15,7 +15,7 @@ func (h *Handler) LoginHandler(c *gin.Context) {
 		return
 	}
 
-	accessToken, refreshToken, err := h.UserServices.Login(req)
+	accessToken, refreshToken, err := h.UserServices.Login(&req)
 	if ginadap.HandleError(c, err) {
 		return
 	}
@@ -24,4 +24,13 @@ func (h *Handler) LoginHandler(c *gin.Context) {
 		"access_token":  accessToken,
 		"refresh_token": refreshToken,
 	})
+}
+
+func (h *Handler) RegisterHandler(c *gin.Context) {
+	req := models_http.UserRequest{}
+	appErr := DecodeBody(c, req)
+	if ginadap.HandleError(c, appErr) {
+		return
+	}
+
 }
