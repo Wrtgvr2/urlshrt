@@ -4,7 +4,7 @@ import (
 	"log"
 
 	env "github.com/joho/godotenv"
-	"github.com/wrtgvr/urlshrt/internal/handlers"
+	"github.com/wrtgvr/urlshrt/api/handlers"
 	rep "github.com/wrtgvr/urlshrt/internal/repository"
 	"github.com/wrtgvr/urlshrt/internal/services"
 	"gorm.io/gorm"
