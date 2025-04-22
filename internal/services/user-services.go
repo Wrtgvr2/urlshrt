@@ -18,6 +18,10 @@ func NewUserServices(repo rep.UserRepo) UserServices {
 }
 
 func (s *UserServices) Login(userReq *models_http.UserRequest) (string, string, *errsuit.AppError) {
+	verr := ValidateUserData(userReq.Username, userReq.Password)
+	if verr != nil {
+		return "", "", verr
+	}
 	user, appErr := s.Repo.GetUserByUsername(userReq.Username)
 	if appErr != nil {
 		return "", "", appErr
@@ -33,6 +37,10 @@ func (s *UserServices) Login(userReq *models_http.UserRequest) (string, string, 
 }
 
 func (s *UserServices) Register(userReq *models_http.UserRequest) (*models_db.User, *errsuit.AppError) {
+	err := ValidateUserData(userReq.Username, userReq.Password)
+	if err != nil {
+		return nil, err
+	}
 	user, appErr := s.Repo.GetUserByUsername(userReq.Username)
 	if appErr != nil && appErr.Type != errsuit.TypeNotFound {
 		return nil, appErr
