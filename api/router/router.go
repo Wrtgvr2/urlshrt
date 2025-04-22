@@ -10,6 +10,7 @@ func RegisterRoutes(h *handlers.Handler) *gin.Engine {
 
 	registerShortUrlsRouter(h, r)
 	registerUserRouter(h, r)
+	registerAuthRouter(h, r)
 
 	return r
 }
