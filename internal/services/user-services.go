@@ -34,7 +34,7 @@ func (s *UserServices) Login(userReq *models_http.UserRequest) (string, string, 
 
 func (s *UserServices) Register(userReq *models_http.UserRequest) (*models_db.User, *errsuit.AppError) {
 	user, appErr := s.Repo.GetUserByUsername(userReq.Username)
-	if appErr != nil {
+	if appErr != nil && appErr.Type != errsuit.TypeNotFound {
 		return nil, appErr
 	}
 	if user != nil {
