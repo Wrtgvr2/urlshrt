@@ -2,10 +2,10 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/wrtgvr/urlshrt/internal/handlers"
+	"github.com/wrtgvr/urlshrt/api/handlers"
 )
 
-func registerShortUrls(h *handlers.Handler, r *gin.Engine) {
+func registerShortUrlsRouter(h *handlers.Handler, r *gin.Engine) {
 	group := r.Group("r")
 	{
 		group.GET("/:shrturl", h.RedirectHandler)
