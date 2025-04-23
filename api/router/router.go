@@ -8,8 +8,7 @@ import (
 func RegisterRoutes(h *handlers.Handler) *gin.Engine {
 	r := gin.Default()
 
-	registerShortUrlsRouter(h, r)
-	registerUserRouter(h, r)
+	registerApiRoutes(h, r)
 	registerAuthRouter(h, r)
 
 	return r
