@@ -9,8 +9,8 @@ import (
 	"github.com/google/uuid"
 )
 
-type Claims struct {
-	UserID uint64 `json:"user_id"`
+type tokenClaims struct {
+	UserID string `json:"sub"`
 	jwt.StandardClaims
 }
 
@@ -19,8 +19,8 @@ var RefreshTokenLifetime = time.Hour * 24 * 30
 var signingMethod = jwt.SigningMethodHS256
 
 func createAccessToken(userID uint64, secretKey []byte) (string, error) {
-	tokenClaims := Claims{
-		UserID: userID,
+	tokenClaims := tokenClaims{
+		UserID: fmt.Sprint(userID),
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(AccessTokenLifetime).Unix(),
 			IssuedAt:  time.Now().Unix(),
@@ -35,8 +35,8 @@ func createAccessToken(userID uint64, secretKey []byte) (string, error) {
 }
 
 func createRefreshToken(userID uint64, secretKey []byte) (string, error) {
-	tokenClaims := Claims{
-		UserID: userID,
+	tokenClaims := tokenClaims{
+		UserID: fmt.Sprint(userID),
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(RefreshTokenLifetime).Unix(),
 			IssuedAt:  time.Now().Unix(),
@@ -67,15 +67,20 @@ func CreateTokens(userID uint64) (string, string, error) {
 	return accessToken, refreshToken, nil
 }
 
-func ValidateAccessToken(tokenStr string) error {
+func ParseTokenStr(tokenStr string) (*jwt.Token, error) {
 	var secretKey = []byte(os.Getenv("JWT_SECRET"))
-
 	token, err := jwt.Parse(tokenStr, func(t *jwt.Token) (any, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method")
 		}
 		return secretKey, nil
 	})
+
+	return token, err
+}
+
+func ValidateAccessToken(tokenStr string) error {
+	token, err := ParseTokenStr(tokenStr)
 	if err != nil {
 		return err
 	}
@@ -84,4 +89,21 @@ func ValidateAccessToken(tokenStr string) error {
 	}
 
 	return nil
+}
+
+func GetUserIdFromToken(tokenStr string) (string, error) {
+	token, err := ParseTokenStr(tokenStr)
+	if err != nil {
+		return "", err
+	}
+	if !token.Valid {
+		return "", fmt.Errorf("invalid token")
+	}
+
+	claims, ok := token.Claims.(*tokenClaims)
+	if !ok {
+		return "", fmt.Errorf("user ID not found in JWT")
+	}
+
+	return claims.UserID, nil
 }
