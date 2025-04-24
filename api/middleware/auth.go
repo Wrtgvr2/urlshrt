@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -13,11 +14,10 @@ func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer ") {
-			ginadap.HandleError(c, errsuit.NewUnauthorized("missing authorization header", nil, false))
+			ginadap.HandleError(c, errsuit.NewUnauthorized("missing authorization header", nil, true))
 			c.Abort()
 			return
 		}
-
 		tokenStr := strings.TrimPrefix(authHeader, "Bearer ")
 		err := jwt.ValidateAccessToken(tokenStr)
 		if err != nil {
@@ -25,6 +25,19 @@ func AuthMiddleware() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+		userIdStr, err := jwt.GetUserIdFromToken(tokenStr)
+		if err != nil {
+			ginadap.HandleError(c, errsuit.NewUnauthorized("invalid token payload", err, true))
+			c.Abort()
+			return
+		}
+		userId, err := strconv.ParseUint(userIdStr, 10, 64)
+		if err != nil {
+			ginadap.HandleError(c, errsuit.NewUnauthorized("invalid userID in token", err, true))
+			c.Abort()
+			return
+		}
+		c.Set("UserID", userId)
 
 		c.Next()
 	}
