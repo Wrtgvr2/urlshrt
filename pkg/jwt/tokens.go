@@ -54,7 +54,7 @@ func createRefreshToken(userID uint64, secretKey []byte) (string, error) {
 // Return: access token, refresh token, error
 func CreateTokens(userID uint64) (string, string, error) {
 	var secretKey = []byte(os.Getenv("JWT_SECRET"))
-	fmt.Printf("JWT_SECRET from env:%ssecretKey from variable: %s\n", os.Getenv("JWT_SECRET"), secretKey)
+
 	accessToken, err := createAccessToken(userID, secretKey)
 	if err != nil {
 		return "", "", err
@@ -65,4 +65,23 @@ func CreateTokens(userID uint64) (string, string, error) {
 	}
 
 	return accessToken, refreshToken, nil
+}
+
+func ValidateAccessToken(tokenStr string) error {
+	var secretKey = []byte(os.Getenv("JWT_SECRET"))
+
+	token, err := jwt.Parse(tokenStr, func(t *jwt.Token) (any, error) {
+		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method")
+		}
+		return secretKey, nil
+	})
+	if err != nil {
+		return err
+	}
+	if !token.Valid {
+		return fmt.Errorf("invalid token")
+	}
+
+	return nil
 }
