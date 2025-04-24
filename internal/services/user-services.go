@@ -3,9 +3,9 @@ package services
 import (
 	models_db "github.com/wrtgvr/urlshrt/internal/models/db"
 	models_http "github.com/wrtgvr/urlshrt/internal/models/http"
-	"github.com/wrtgvr/urlshrt/internal/pkg/hash"
-	"github.com/wrtgvr/urlshrt/internal/pkg/jwt"
 	rep "github.com/wrtgvr/urlshrt/internal/repository"
+	"github.com/wrtgvr/urlshrt/pkg/hash"
+	"github.com/wrtgvr/urlshrt/pkg/jwt"
 	"github.com/wrtgvr2/errsuit"
 )
 
@@ -31,7 +31,7 @@ func (s *UserServices) Login(userReq *models_http.UserRequest) (string, string, 
 	}
 	accessToken, refreshToken, err := jwt.CreateTokens(user.ID)
 	if err != nil {
-		return "", "", errsuit.NewInternal("can't create tokens", err, true)
+		return "", "", errsuit.NewInternal("failed to create tokens", err, true)
 	}
 	return accessToken, refreshToken, nil
 }
