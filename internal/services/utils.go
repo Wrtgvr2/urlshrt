@@ -3,8 +3,8 @@ package services
 import (
 	models_db "github.com/wrtgvr/urlshrt/internal/models/db"
 	models_http "github.com/wrtgvr/urlshrt/internal/models/http"
-	"github.com/wrtgvr/urlshrt/internal/pkg/hash"
 	"github.com/wrtgvr/urlshrt/internal/validation"
+	"github.com/wrtgvr/urlshrt/pkg/hash"
 	"github.com/wrtgvr2/errsuit"
 )
 
