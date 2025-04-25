@@ -26,7 +26,7 @@ func (s *UserServices) Login(userReq *models_http.UserRequest) (string, string, 
 	if appErr != nil {
 		return "", "", appErr
 	}
-	if passwordCorrect := hash.CheckPasswordHash(userReq.Password, user.PasswordHash); !passwordCorrect {
+	if passwordCorrect := hash.CheckPasswordWithHash(userReq.Password, user.PasswordHash); !passwordCorrect {
 		return "", "", errsuit.NewUnauthorized("password mismatch", nil, false)
 	}
 	accessToken, refreshToken, err := jwt.CreateTokens(user.ID)
