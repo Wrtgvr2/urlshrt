@@ -19,7 +19,7 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 		tokenStr := strings.TrimPrefix(authHeader, "Bearer ")
-		err := jwt.ValidateAccessToken(tokenStr)
+		err := jwt.ValidateToken(tokenStr)
 		if err != nil {
 			ginadap.HandleError(c, errsuit.NewUnauthorized("invalid token", err, true))
 			c.Abort()
