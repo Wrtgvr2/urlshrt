@@ -26,14 +26,28 @@ func (s *AuthServices) Login(userReq *models_http.UserRequest) (string, string, 
 	if verr != nil {
 		return "", "", verr
 	}
+
 	user, appErr := s.UserRepo.GetUserByUsername(userReq.Username)
 	if appErr != nil {
 		return "", "", appErr
 	}
+
 	if passwordCorrect := hash.CheckPasswordWithHash(userReq.Password, user.PasswordHash); !passwordCorrect {
 		return "", "", errsuit.NewUnauthorized("password mismatch", nil, false)
 	}
+
 	accessToken, refreshToken, err := jwt.CreateTokens(user.ID)
+
+	tokenModel, appErr := CreateRefreshTokenModel(refreshToken)
+	if appErr != nil {
+		return "", "", appErr
+	}
+
+	_, appErr = s.TokenRepo.CreateRefreshTokenInfo(tokenModel)
+	if appErr != nil {
+		return "", "", appErr
+	}
+
 	if err != nil {
 		return "", "", errsuit.NewInternal("failed to create tokens", err, true)
 	}
