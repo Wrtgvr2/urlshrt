@@ -46,23 +46,28 @@ func (p *PostgresTokenRepo) GetNotRevokedTokenByJTI(jti string) (*models_db.Refr
 	return token, nil
 }
 
-func (p *PostgresTokenRepo) ReplaceRefreshToken(oldTokenJTI, tokenStr string) (*models_db.RefreshToken, *errsuit.AppError) {
-	oldToken, appErr := p.GetNotRevokedTokenByJTI(oldTokenJTI)
+func (p *PostgresTokenRepo) RevokeToken(jti string) *errsuit.AppError {
+	token, appErr := p.GetNotRevokedTokenByJTI(jti)
 	if appErr != nil {
-		return nil, appErr
+		return appErr
 	}
-	oldToken.Revoked = true
-	err := p.DB.Save(oldToken).Error
+	token.Revoked = true
+	err := p.DB.Save(token).Error
 	if err != nil {
-		return nil, errsuit.NewInternal("unable to update token info", err, true)
+		return errsuit.NewInternal("unable to update token info", err, true)
+	}
+	return nil
+}
+
+func (p *PostgresTokenRepo) ReplaceRefreshToken(oldTokenJTI string, newTokenData models_db.RefreshToken) (*models_db.RefreshToken, *errsuit.AppError) {
+	err := p.RevokeToken(oldTokenJTI)
+	if err != nil {
+		return nil, err
+	}
+	newToken, err := p.CreateRefreshTokenInfo(&newTokenData)
+	if err != nil {
+		return nil, err
 	}
 
-	//newToken, err := p.CreateRefreshTokenInfo()
-
-	// При входе - создавать токены
-	// При обновлении токенов - отзывать прошлый токен, создавать новый, с новым JTI
-	// TODO:
-	// 1. Создание токена в БД при создании токенов при логине
-	// 2. Завершить функцию "замены" токенов (удаление прошлого, создание нового)
-	// 3. ???
+	return newToken, nil
 }

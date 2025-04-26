@@ -30,6 +30,14 @@ func AuthMiddleware() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+<<<<<<< HEAD
+=======
+		if err != nil {
+			ginadap.HandleError(c, errsuit.NewUnauthorized("invalid userID in token", err, true))
+			c.Abort()
+			return
+		}
+>>>>>>> dfbaed329160dd3ea8b7f0e3fc79de58d3c80e63
 		c.Set("UserID", userId)
 
 		c.Next()
