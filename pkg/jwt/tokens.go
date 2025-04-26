@@ -3,6 +3,7 @@ package jwt
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -109,13 +110,16 @@ func GetTokenClaims(tokenStr string) (*tokenClaims, error) {
 	return claims, nil
 }
 
-func GetUserIdFromToken(tokenStr string) (string, error) {
+func GetUserIdFromToken(tokenStr string) (uint64, error) {
 	claims, err := GetTokenClaims(tokenStr)
 	if err != nil {
-		return "", err
+		return 0, err
 	}
-
-	return claims.UserID, nil
+	id, err := strconv.ParseUint(claims.UserID, 10, 64)
+	if err != nil {
+		return 0, err
+	}
+	return id, nil
 }
 
 func GetTokenExpirationUnixTime(tokenStr string) (int64, error) {
