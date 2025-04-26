@@ -30,11 +30,13 @@ func InitApp() *App {
 func initHandler(db *gorm.DB) *handlers.Handler {
 	userRepo := rep.NewPostgresUserRepo(db)
 	urlRepo := rep.NewPostgresUrlRepo(db)
+	tokenRepo := rep.NewPostgresTokenRepo(db)
 
 	userServices := services.NewUserServices(userRepo)
 	urlServices := services.NewUrlServices(urlRepo)
+	authServices := services.NewAuthServices(userRepo, tokenRepo)
 
-	h := handlers.NewHandler(&userServices, &urlServices)
+	h := handlers.NewHandler(&userServices, &urlServices, &authServices)
 
 	return h
 }
