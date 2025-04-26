@@ -6,6 +6,7 @@ import (
 )
 
 type UserRepo interface {
+	GetUserById(id uint64) (*models_db.User, *errsuit.AppError)
 	GetUserByUsername(string) (*models_db.User, *errsuit.AppError)
 	CreateUser(*models_db.User) (*models_db.User, *errsuit.AppError)
 }
@@ -13,5 +14,9 @@ type UserRepo interface {
 type UrlRepo interface{}
 
 type TokenRepo interface {
-	CreateRefreshTokenInfo(*models_db.RefreshToken) (*models_db.RefreshToken, *errsuit.AppError)
+	CreateRefreshTokenInfo(tokenData *models_db.RefreshToken) (*models_db.RefreshToken, *errsuit.AppError)
+	GetTokenByJTI(jti string) (*models_db.RefreshToken, *errsuit.AppError)
+	GetNotRevokedTokenByJTI(jti string) (*models_db.RefreshToken, *errsuit.AppError)
+	RevokeToken(jti string) *errsuit.AppError
+	ReplaceRefreshToken(oldTokenJTI string, newTokenData models_db.RefreshToken) (*models_db.RefreshToken, *errsuit.AppError)
 }
