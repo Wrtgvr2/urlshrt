@@ -35,8 +35,12 @@ func initHandler(db *gorm.DB) *handlers.Handler {
 	userServices := services.NewUserServices(userRepo)
 	urlServices := services.NewUrlServices(urlRepo)
 	authServices := services.NewAuthServices(userRepo, tokenRepo)
+	tokenServices := services.NewTokenServices(tokenRepo)
 
-	h := handlers.NewHandler(&userServices, &urlServices, &authServices)
+	h := handlers.NewHandler(
+		&userServices, &urlServices,
+		&authServices, &tokenServices,
+	)
 
 	return h
 }
