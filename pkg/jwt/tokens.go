@@ -67,14 +67,18 @@ func CreateTokens(userID uint64) (string, string, error) {
 	return accessToken, refreshToken, nil
 }
 
-func ParseTokenStr(tokenStr string) (*jwt.Token, error) {
+func keyFunc(t *jwt.Token) (any, error) {
 	var secretKey = []byte(os.Getenv("JWT_SECRET"))
-	token, err := jwt.Parse(tokenStr, func(t *jwt.Token) (any, error) {
-		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method")
-		}
-		return secretKey, nil
-	})
+
+	if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
+		return nil, fmt.Errorf("unexpected signing method")
+	}
+
+	return secretKey, nil
+}
+
+func ParseTokenStr(tokenStr string) (*jwt.Token, error) {
+	token, err := jwt.Parse(tokenStr, keyFunc)
 
 	return token, err
 }
@@ -90,20 +94,34 @@ func ValidateToken(tokenStr string) error {
 
 	return nil
 }
+func GetTokenClaims(tokenStr string) (*tokenClaims, error) {
+	claims := &tokenClaims{}
+	token, err := jwt.ParseWithClaims(tokenStr, claims, keyFunc)
+	if !token.Valid {
+		return nil, err
+	}
+
+	if !token.Valid {
+		return nil, fmt.Errorf("invalid token")
+	}
+
+	return claims, nil
+}
 
 func GetUserIdFromToken(tokenStr string) (string, error) {
-	token, err := ParseTokenStr(tokenStr)
+	claims, err := GetTokenClaims(tokenStr)
 	if err != nil {
 		return "", err
 	}
-	if !token.Valid {
-		return "", fmt.Errorf("invalid token")
-	}
-
-	claims, ok := token.Claims.(*tokenClaims)
-	if !ok {
-		return "", fmt.Errorf("user ID not found in JWT")
-	}
 
 	return claims.UserID, nil
+}
+
+func GetJtiFromRefreshToken(tokenStr string) (string, error) {
+	claims, err := GetTokenClaims(tokenStr)
+	if err != nil {
+		return "", err
+	}
+
+	return claims.Id, nil
 }
