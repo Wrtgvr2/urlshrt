@@ -12,6 +12,6 @@ type UserRepo interface {
 
 type UrlRepo interface{}
 
-type RefreshTokenRepo interface {
+type TokenRepo interface {
 	CreateRefreshTokenInfo(*models_db.RefreshToken) (*models_db.RefreshToken, *errsuit.AppError)
 }

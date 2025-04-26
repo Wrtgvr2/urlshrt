@@ -15,7 +15,7 @@ func (h *Handler) LoginHandler(c *gin.Context) {
 		return
 	}
 
-	accessToken, refreshToken, err := h.UserServices.Login(&req)
+	accessToken, refreshToken, err := h.AuthServices.Login(&req)
 	if ginadap.HandleError(c, err) {
 		return
 	}
@@ -33,10 +33,14 @@ func (h *Handler) RegisterHandler(c *gin.Context) {
 		return
 	}
 
-	user, err := h.UserServices.Register(&req)
+	user, err := h.AuthServices.Register(&req)
 	if ginadap.HandleError(c, err) {
 		return
 	}
 
 	c.JSON(http.StatusCreated, user)
+}
+
+func (h *Handler) RefreshTokenHandler(c *gin.Context) {
+
 }
