@@ -94,6 +94,7 @@ func ValidateToken(tokenStr string) error {
 
 	return nil
 }
+
 func GetTokenClaims(tokenStr string) (*tokenClaims, error) {
 	claims := &tokenClaims{}
 	token, err := jwt.ParseWithClaims(tokenStr, claims, keyFunc)
@@ -117,11 +118,23 @@ func GetUserIdFromToken(tokenStr string) (string, error) {
 	return claims.UserID, nil
 }
 
-func GetJtiFromRefreshToken(tokenStr string) (string, error) {
+func GetTokenExpirationUnixTime(tokenStr string) (int64, error) {
 	claims, err := GetTokenClaims(tokenStr)
 	if err != nil {
-		return "", err
+		return 0, err
 	}
 
-	return claims.Id, nil
+	return claims.ExpiresAt, nil
+}
+
+func GetJtiFromRefreshToken(tokenStr string) (uuid.UUID, error) {
+	claims, err := GetTokenClaims(tokenStr)
+	if err != nil {
+		return uuid.Nil, err
+	}
+	jti, err := uuid.Parse(claims.Id)
+	if err != nil {
+		return uuid.Nil, err
+	}
+	return jti, nil
 }
