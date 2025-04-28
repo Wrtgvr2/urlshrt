@@ -18,13 +18,14 @@ func convertUserReqToUserDb(userReq *models_http.UserRequest) (*models_db.User, 
 	}
 
 	userData := models_db.User{
-		ID:           0,
 		Username:     userReq.Username,
 		PasswordHash: hashedPassword,
 	}
 
 	if userReq.DisplayUsername != nil {
 		userData.DisplayUsername = userReq.Username
+	} else {
+		userData.DisplayUsername = userData.Username
 	}
 
 	return &userData, nil
