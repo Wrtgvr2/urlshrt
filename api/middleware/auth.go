@@ -17,6 +17,7 @@ func AuthMiddleware() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+
 		tokenStr := strings.TrimPrefix(authHeader, "Bearer ")
 		err := jwt.ValidateToken(tokenStr)
 		if err != nil {
@@ -24,6 +25,15 @@ func AuthMiddleware() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+
+		jti, err := jwt.GetJtiFromRefreshToken(tokenStr)
+		if err != nil {
+			ginadap.HandleError(c, errsuit.NewUnauthorized("invalid token payload", err, true))
+			c.Abort()
+			return
+		}
+		c.Set("JTI", jti)
+
 		userId, err := jwt.GetUserIdFromToken(tokenStr)
 		if err != nil {
 			ginadap.HandleError(c, errsuit.NewUnauthorized("invalid token payload", err, true))
