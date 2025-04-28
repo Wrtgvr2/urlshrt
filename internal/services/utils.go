@@ -30,7 +30,7 @@ func convertUserReqToUserDb(userReq *models_http.UserRequest) (*models_db.User, 
 	return &userData, nil
 }
 
-func ValidateUserData(username, password string) *errsuit.AppError {
+func validateUserData(username, password string) *errsuit.AppError {
 	err := validation.ValidateUsername(username)
 	if err != nil {
 		return err
@@ -42,7 +42,7 @@ func ValidateUserData(username, password string) *errsuit.AppError {
 	return nil
 }
 
-func CreateRefreshTokenModel(tokenStr string) (*models_db.RefreshToken, *errsuit.AppError) {
+func createRefreshTokenModel(tokenStr string) (*models_db.RefreshToken, *errsuit.AppError) {
 	tokenJti, err := jwt.GetJtiFromRefreshToken(tokenStr)
 	if err != nil {
 		return nil, errsuit.NewInternal("unable to get jti from token", err, true)

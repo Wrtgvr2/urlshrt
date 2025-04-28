@@ -22,7 +22,7 @@ func NewAuthServices(userRepo rep.UserRepo, tokenRepo rep.TokenRepo) AuthService
 }
 
 func (s *AuthServices) Login(userReq *models_http.UserRequest) (string, string, *errsuit.AppError) {
-	verr := ValidateUserData(userReq.Username, userReq.Password)
+	verr := validateUserData(userReq.Username, userReq.Password)
 	if verr != nil {
 		return "", "", verr
 	}
@@ -38,7 +38,7 @@ func (s *AuthServices) Login(userReq *models_http.UserRequest) (string, string, 
 
 	accessToken, refreshToken, err := jwt.CreateTokens(user.ID)
 
-	tokenModel, appErr := CreateRefreshTokenModel(refreshToken)
+	tokenModel, appErr := createRefreshTokenModel(refreshToken)
 	if appErr != nil {
 		return "", "", appErr
 	}
@@ -55,7 +55,7 @@ func (s *AuthServices) Login(userReq *models_http.UserRequest) (string, string, 
 }
 
 func (s *AuthServices) Register(userReq *models_http.UserRequest) (*models_db.User, *errsuit.AppError) {
-	err := ValidateUserData(userReq.Username, userReq.Password)
+	err := validateUserData(userReq.Username, userReq.Password)
 	if err != nil {
 		return nil, err
 	}
