@@ -11,6 +11,6 @@ func registerAuthRouter(h *handlers.Handler, r *gin.Engine) {
 	{
 		group.POST("/login", h.LoginHandler)
 		group.POST("/register", h.RegisterHandler)
-		group.POST("/refresh", middleware.AuthMiddleware(), h.RefreshTokenHandler)
+		group.POST("/refresh", middleware.RefreshAuthMiddleware(), h.RefreshTokenHandler)
 	}
 }
