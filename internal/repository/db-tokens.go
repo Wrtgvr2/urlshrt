@@ -48,7 +48,7 @@ func (p *PostgresTokenRepo) GetNotRevokedTokenByJTI(jti uuid.UUID) (*models_db.R
 }
 
 func (p *PostgresTokenRepo) RevokeToken(jti uuid.UUID) *errsuit.AppError {
-	token, appErr := p.GetNotRevokedTokenByJTI(jti)
+	token, appErr := p.GetTokenByJTI(jti)
 	if appErr != nil {
 		return appErr
 	}
