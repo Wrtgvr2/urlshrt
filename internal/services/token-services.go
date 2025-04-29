@@ -1,6 +1,7 @@
 package services
 
 import (
+	"github.com/google/uuid"
 	models_db "github.com/wrtgvr/urlshrt/internal/models/db"
 	rep "github.com/wrtgvr/urlshrt/internal/repository"
 	"github.com/wrtgvr2/errsuit"
@@ -16,7 +17,7 @@ func NewTokenServices(repo rep.TokenRepo) TokenServices {
 	}
 }
 
-func (s *TokenServices) UpdateRefreshToken(jti, newTokenStr string) (*models_db.RefreshToken, *errsuit.AppError) {
+func (s *TokenServices) UpdateRefreshToken(jti uuid.UUID, newTokenStr string) (*models_db.RefreshToken, *errsuit.AppError) {
 	_, appErr := s.Repo.GetNotRevokedTokenByJTI(jti)
 	if appErr != nil {
 		return nil, appErr

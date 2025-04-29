@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"github.com/google/uuid"
 	models_db "github.com/wrtgvr/urlshrt/internal/models/db"
 	"github.com/wrtgvr2/errsuit"
 	"gorm.io/gorm"
@@ -23,7 +24,7 @@ func (p *PostgresTokenRepo) CreateRefreshTokenInfo(tokenData *models_db.RefreshT
 	return tokenData, nil
 }
 
-func (p *PostgresTokenRepo) GetTokenByJTI(jti string) (*models_db.RefreshToken, *errsuit.AppError) {
+func (p *PostgresTokenRepo) GetTokenByJTI(jti uuid.UUID) (*models_db.RefreshToken, *errsuit.AppError) {
 	var token models_db.RefreshToken
 	err := p.DB.First(&token, jti).Error
 	if err != nil {
@@ -35,7 +36,7 @@ func (p *PostgresTokenRepo) GetTokenByJTI(jti string) (*models_db.RefreshToken, 
 	return &token, nil
 }
 
-func (p *PostgresTokenRepo) GetNotRevokedTokenByJTI(jti string) (*models_db.RefreshToken, *errsuit.AppError) {
+func (p *PostgresTokenRepo) GetNotRevokedTokenByJTI(jti uuid.UUID) (*models_db.RefreshToken, *errsuit.AppError) {
 	token, err := p.GetTokenByJTI(jti)
 	if err != nil {
 		return nil, err
@@ -46,7 +47,7 @@ func (p *PostgresTokenRepo) GetNotRevokedTokenByJTI(jti string) (*models_db.Refr
 	return token, nil
 }
 
-func (p *PostgresTokenRepo) RevokeToken(jti string) *errsuit.AppError {
+func (p *PostgresTokenRepo) RevokeToken(jti uuid.UUID) *errsuit.AppError {
 	token, appErr := p.GetNotRevokedTokenByJTI(jti)
 	if appErr != nil {
 		return appErr
@@ -59,7 +60,7 @@ func (p *PostgresTokenRepo) RevokeToken(jti string) *errsuit.AppError {
 	return nil
 }
 
-func (p *PostgresTokenRepo) ReplaceRefreshToken(oldTokenJTI string, newTokenData models_db.RefreshToken) (*models_db.RefreshToken, *errsuit.AppError) {
+func (p *PostgresTokenRepo) ReplaceRefreshToken(oldTokenJTI uuid.UUID, newTokenData models_db.RefreshToken) (*models_db.RefreshToken, *errsuit.AppError) {
 	err := p.RevokeToken(oldTokenJTI)
 	if err != nil {
 		return nil, err
