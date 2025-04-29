@@ -14,14 +14,13 @@ func registerApiRoutes(h *handlers.Handler, r *gin.Engine) {
 			rGroup.GET("/:shrturl", h.RedirectHandler)
 			//rGroup.POST("/shorten", h.ShortenHandler)
 		}
-		// usersGroup := apiGroup.Group("users")
-		// {
-		//	 POST create
-		// 	 GET all
-		//   GET {id}
-		//   PATCH {id}
-		//   DELETE {id}
-		// }
+		usersGroup := apiGroup.Group("users")
+		{
+			usersGroup.GET("/:id", h.GetUserHandler)
+			// GET all
+			// PATCH {id}
+			// DELETE {id}
+		}
 		// urlsGroup := apiGroup.Group("urls")
 		// {
 		//   POST create
