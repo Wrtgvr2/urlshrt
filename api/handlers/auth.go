@@ -78,7 +78,7 @@ func (h *Handler) RefreshTokenHandler(c *gin.Context) {
 		return
 	}
 
-	c.JSON(201, gin.H{
+	c.JSON(200, gin.H{
 		"access_token":  newAccessToken,
 		"refresh_token": newRefreshToken,
 	})
