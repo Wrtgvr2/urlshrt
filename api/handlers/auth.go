@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	models_http "github.com/wrtgvr/urlshrt/internal/models/http"
 	"github.com/wrtgvr/urlshrt/pkg/jwt"
 	"github.com/wrtgvr2/errsuit"
@@ -49,8 +50,10 @@ func (h *Handler) RefreshTokenHandler(c *gin.Context) {
 		ginadap.HandleError(c, errsuit.NewUnauthorized("jti not found in context", nil, false))
 		return
 	}
-	jti, ok := jtiAny.(string)
+
+	jti, ok := jtiAny.(uuid.UUID)
 	if !ok {
+		ginadap.HandleError(c, errsuit.NewUnauthorized("invalid jti", nil, false))
 		return
 	}
 
@@ -75,7 +78,7 @@ func (h *Handler) RefreshTokenHandler(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, gin.H{
+	c.JSON(201, gin.H{
 		"access_token":  newAccessToken,
 		"refresh_token": newRefreshToken,
 	})
