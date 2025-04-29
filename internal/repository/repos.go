@@ -17,7 +17,7 @@ type UrlRepo interface{}
 type TokenRepo interface {
 	CreateRefreshTokenInfo(tokenData *models_db.RefreshToken) (*models_db.RefreshToken, *errsuit.AppError)
 	GetTokenByJTI(jti uuid.UUID) (*models_db.RefreshToken, *errsuit.AppError)
-	GetNotRevokedTokenByJTI(jti uuid.UUID) (*models_db.RefreshToken, *errsuit.AppError)
 	RevokeToken(jti uuid.UUID) *errsuit.AppError
 	ReplaceRefreshToken(oldTokenJTI uuid.UUID, newTokenData models_db.RefreshToken) (*models_db.RefreshToken, *errsuit.AppError)
+	GetValidTokenByJti(jti uuid.UUID) (*models_db.RefreshToken, *errsuit.AppError)
 }

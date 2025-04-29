@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	models_db "github.com/wrtgvr/urlshrt/internal/models/db"
 	"github.com/wrtgvr2/errsuit"
@@ -36,14 +38,19 @@ func (p *PostgresTokenRepo) GetTokenByJTI(jti uuid.UUID) (*models_db.RefreshToke
 	return &token, nil
 }
 
-func (p *PostgresTokenRepo) GetNotRevokedTokenByJTI(jti uuid.UUID) (*models_db.RefreshToken, *errsuit.AppError) {
+func (p *PostgresTokenRepo) GetValidTokenByJti(jti uuid.UUID) (*models_db.RefreshToken, *errsuit.AppError) {
 	token, err := p.GetTokenByJTI(jti)
 	if err != nil {
 		return nil, err
 	}
-	if token.Revoked {
-		return nil, errsuit.NewUnauthorized("invalid token", err, false)
+
+	if token.ExpiresAt.Unix() >= time.Now().Unix() {
+		return nil, errsuit.NewUnauthorized("token is expired", nil, false)
 	}
+	if token.Revoked {
+		return nil, errsuit.NewUnauthorized("token is revoked", nil, false)
+	}
+
 	return token, nil
 }
 

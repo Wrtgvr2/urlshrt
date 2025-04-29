@@ -18,7 +18,7 @@ func NewTokenServices(repo rep.TokenRepo) TokenServices {
 }
 
 func (s *TokenServices) UpdateRefreshToken(jti uuid.UUID, newTokenStr string) (*models_db.RefreshToken, *errsuit.AppError) {
-	_, appErr := s.Repo.GetNotRevokedTokenByJTI(jti)
+	_, appErr := s.Repo.GetValidTokenByJti(jti)
 	if appErr != nil {
 		return nil, appErr
 	}
