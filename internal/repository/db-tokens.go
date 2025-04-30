@@ -44,7 +44,7 @@ func (p *PostgresTokenRepo) GetValidTokenByJti(jti uuid.UUID) (*models_db.Refres
 		return nil, err
 	}
 
-	if token.ExpiresAt.Unix() >= time.Now().Unix() {
+	if token.ExpiresAt.Unix() <= time.Now().Unix() {
 		return nil, errsuit.NewUnauthorized("token is expired", nil, false)
 	}
 	if token.Revoked {
