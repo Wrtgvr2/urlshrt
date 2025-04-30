@@ -14,11 +14,14 @@ type App struct {
 	Handler *handlers.Handler
 }
 
-func InitApp() *App {
+func LoadEnvVars() {
 	if err := env.Load(); err != nil {
 		log.Fatal(err)
 	}
+}
 
+func InitApp() *App {
+	LoadEnvVars()
 	db := rep.InitDatabase()
 	h := initHandler(db)
 
