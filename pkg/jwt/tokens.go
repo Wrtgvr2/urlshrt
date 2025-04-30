@@ -84,7 +84,7 @@ func ParseTokenStr(tokenStr string) (*jwt.Token, error) {
 	return token, err
 }
 
-func ValidateToken(tokenStr string) error {
+func ParseToken(tokenStr string) error {
 	token, err := ParseTokenStr(tokenStr)
 	if err != nil {
 		return err
