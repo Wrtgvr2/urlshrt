@@ -21,3 +21,7 @@ type TokenRepo interface {
 	ReplaceRefreshToken(oldTokenJTI uuid.UUID, newTokenData models_db.RefreshToken) (*models_db.RefreshToken, *errsuit.AppError)
 	GetValidTokenByJti(jti uuid.UUID) (*models_db.RefreshToken, *errsuit.AppError)
 }
+
+type TokensCleanupRepo interface {
+	DeleteTooOldTokens() (int64, error)
+}
