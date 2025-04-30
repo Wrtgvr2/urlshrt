@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 	"github.com/wrtgvr2/errsuit"
 )
@@ -11,4 +13,15 @@ func DecodeBody(c *gin.Context, obj any) *errsuit.AppError {
 		return errsuit.NewBadRequest("invalid body", err, false)
 	}
 	return nil
+}
+
+func GetIdFromContext(c *gin.Context) (uint64, error) {
+	idStr := c.Param("id")
+
+	id, err := strconv.ParseUint(idStr, 10, 64)
+	if err != nil {
+		return 0, errsuit.NewBadRequest("invalid id", err, false)
+	}
+
+	return id, nil
 }

@@ -1,19 +1,27 @@
 package handlers
 
 import (
-	"strconv"
-
 	"github.com/gin-gonic/gin"
-	"github.com/wrtgvr2/errsuit"
 	"github.com/wrtgvr2/errsuit/drivers/ginadap"
 )
 
 func (h *Handler) GetUserHandler(c *gin.Context) {
-	idStr := c.Param("id")
+	id, err := GetIdFromContext(c)
+	if ginadap.HandleError(c, err) {
+		return
+	}
 
-	id, err := strconv.ParseUint(idStr, 10, 64)
-	if err != nil {
-		ginadap.HandleError(c, errsuit.NewBadRequest("invalid id", err, false))
+	user, appErr := h.UserServices.GetUser(id)
+	if ginadap.HandleError(c, appErr) {
+		return
+	}
+
+	c.JSON(200, user)
+}
+
+func (h *Handler) GetUsersHandler(c *gin.Context) {
+	id, err := GetIdFromContext(c)
+	if ginadap.HandleError(c, err) {
 		return
 	}
 
