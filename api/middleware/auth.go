@@ -24,6 +24,16 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
+		tokenType, err := jwt.GetTokenType(tokenStr)
+		if err != nil {
+			ginadap.HandleError(c, errsuit.NewUnauthorized("invalid token", err, true))
+			return
+		}
+		if tokenType != jwt.TypeAccess {
+			ginadap.HandleError(c, errsuit.NewUnauthorized("invalid token", err, true))
+			return
+		}
+
 		userId, err := jwt.GetUserIdFromToken(tokenStr)
 		if err != nil {
 			ginadap.HandleError(c, errsuit.NewUnauthorized("invalid token payload", err, true))

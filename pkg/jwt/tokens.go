@@ -12,16 +12,26 @@ import (
 
 type tokenClaims struct {
 	UserID string `json:"sub"`
+	Type   string `json:"type"`
 	jwt.StandardClaims
 }
 
-var AccessTokenLifetime = time.Minute * 15
-var RefreshTokenLifetime = time.Hour * 24 * 30
+var (
+	TypeRefresh = "refresh"
+	TypeAccess  = "access"
+)
+
+var (
+	AccessTokenLifetime  = time.Minute * 15
+	RefreshTokenLifetime = time.Hour * 24 * 30
+)
+
 var signingMethod = jwt.SigningMethodHS256
 
 func createAccessToken(userID uint64, secretKey []byte) (string, error) {
 	tokenClaims := tokenClaims{
 		UserID: fmt.Sprint(userID),
+		Type:   TypeAccess,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(AccessTokenLifetime).Unix(),
 			IssuedAt:  time.Now().Unix(),
@@ -38,6 +48,7 @@ func createAccessToken(userID uint64, secretKey []byte) (string, error) {
 func createRefreshToken(userID uint64, secretKey []byte) (string, error) {
 	tokenClaims := tokenClaims{
 		UserID: fmt.Sprint(userID),
+		Type:   TypeRefresh,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(RefreshTokenLifetime).Unix(),
 			IssuedAt:  time.Now().Unix(),
@@ -129,6 +140,15 @@ func GetTokenExpirationUnixTime(tokenStr string) (int64, error) {
 	}
 
 	return claims.ExpiresAt, nil
+}
+
+func GetTokenType(tokenStr string) (string, error) {
+	claims, err := GetTokenClaims(tokenStr)
+	if err != nil {
+		return "", err
+	}
+
+	return claims.Type, nil
 }
 
 func GetJtiFromRefreshToken(tokenStr string) (uuid.UUID, error) {

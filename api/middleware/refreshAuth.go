@@ -24,16 +24,26 @@ func RefreshAuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
+		tokenType, err := jwt.GetTokenType(tokenStr)
+		if err != nil {
+			ginadap.HandleError(c, errsuit.NewUnauthorized("invalid token", err, true))
+			return
+		}
+		if tokenType != jwt.TypeRefresh {
+			ginadap.HandleError(c, errsuit.NewUnauthorized("invalid token", err, true))
+			return
+		}
+
 		jti, err := jwt.GetJtiFromRefreshToken(tokenStr)
 		if err != nil {
-			ginadap.HandleError(c, errsuit.NewUnauthorized("invalid token payload", err, true))
+			ginadap.HandleError(c, errsuit.NewUnauthorized("invalid token", err, true))
 			return
 		}
 		c.Set("JTI", jti)
 
 		userId, err := jwt.GetUserIdFromToken(tokenStr)
 		if err != nil {
-			ginadap.HandleError(c, errsuit.NewUnauthorized("invalid token payload", err, true))
+			ginadap.HandleError(c, errsuit.NewUnauthorized("invalid token", err, true))
 			return
 		}
 		c.Set("UserID", userId)
