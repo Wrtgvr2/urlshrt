@@ -10,6 +10,7 @@ type UserRepo interface {
 	GetUserById(id uint64) (*models_db.User, *errsuit.AppError)
 	GetUserByUsername(string) (*models_db.User, *errsuit.AppError)
 	CreateUser(*models_db.User) (*models_db.User, *errsuit.AppError)
+	GetAllUsers() ([]models_db.User, *errsuit.AppError)
 }
 
 type UrlRepo interface{}

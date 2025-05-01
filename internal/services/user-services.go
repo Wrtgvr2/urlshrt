@@ -27,3 +27,18 @@ func (s UserServices) GetUser(id uint64) (*models_http.UserResponse, error) {
 
 	return &userRes, nil
 }
+
+func (s UserServices) GetUsers() ([]models_http.UserResponse, error) {
+	usersDb, err := s.UserRepo.GetAllUsers()
+	if err != nil {
+		return nil, err
+	}
+
+	users := []models_http.UserResponse{}
+
+	for _, u := range usersDb {
+		users = append(users, *convertUserDbToUserResp(&u))
+	}
+
+	return users, nil
+}

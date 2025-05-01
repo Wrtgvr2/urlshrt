@@ -20,12 +20,7 @@ func (h *Handler) GetUserHandler(c *gin.Context) {
 }
 
 func (h *Handler) GetUsersHandler(c *gin.Context) {
-	id, err := GetIdFromContext(c)
-	if ginadap.HandleError(c, err) {
-		return
-	}
-
-	user, appErr := h.UserServices.GetUser(id)
+	user, appErr := h.UserServices.GetUsers()
 	if ginadap.HandleError(c, appErr) {
 		return
 	}

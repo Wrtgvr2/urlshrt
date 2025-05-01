@@ -11,6 +11,14 @@ import (
 	"github.com/wrtgvr2/errsuit"
 )
 
+func convertUserDbToUserResp(userDb *models_db.User) *models_http.UserResponse {
+	return &models_http.UserResponse{
+		ID:              userDb.ID,
+		Username:        userDb.Username,
+		DisplayUsername: userDb.DisplayUsername,
+	}
+}
+
 func convertUserReqToUserDb(userReq *models_http.UserRequest) (*models_db.User, *errsuit.AppError) {
 	hashedPassword, err := hash.HashPassword(userReq.Password)
 	if err != nil {
