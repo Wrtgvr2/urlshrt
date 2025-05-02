@@ -7,20 +7,21 @@ import (
 )
 
 type UserRepo interface {
-	GetUserById(id uint64) (*models_db.User, *errsuit.AppError)
+	GetUserById(uint64) (*models_db.User, *errsuit.AppError)
 	GetUserByUsername(string) (*models_db.User, *errsuit.AppError)
 	CreateUser(*models_db.User) (*models_db.User, *errsuit.AppError)
 	GetAllUsers() ([]models_db.User, *errsuit.AppError)
+	DeleteUser(uint64) *errsuit.AppError
 }
 
 type UrlRepo interface{}
 
 type TokenRepo interface {
-	CreateRefreshTokenInfo(tokenData *models_db.RefreshToken) (*models_db.RefreshToken, *errsuit.AppError)
-	GetTokenByJTI(jti uuid.UUID) (*models_db.RefreshToken, *errsuit.AppError)
-	RevokeToken(jti uuid.UUID) *errsuit.AppError
-	ReplaceRefreshToken(oldTokenJTI uuid.UUID, newTokenData models_db.RefreshToken) (*models_db.RefreshToken, *errsuit.AppError)
-	GetValidTokenByJti(jti uuid.UUID) (*models_db.RefreshToken, *errsuit.AppError)
+	CreateRefreshTokenInfo(*models_db.RefreshToken) (*models_db.RefreshToken, *errsuit.AppError)
+	GetTokenByJTI(uuid.UUID) (*models_db.RefreshToken, *errsuit.AppError)
+	RevokeToken(uuid.UUID) *errsuit.AppError
+	ReplaceRefreshToken(uuid.UUID, models_db.RefreshToken) (*models_db.RefreshToken, *errsuit.AppError)
+	GetValidTokenByJti(uuid.UUID) (*models_db.RefreshToken, *errsuit.AppError)
 }
 
 type TokensCleanupRepo interface {

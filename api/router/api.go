@@ -19,7 +19,7 @@ func registerApiRoutes(h *handlers.Handler, r *gin.Engine) {
 			usersGroup.GET("/:id", h.GetUserHandler)
 			usersGroup.GET("", h.GetUsersHandler)
 			// PATCH {id}
-			// DELETE {id}
+			usersGroup.DELETE("/:id", h.DeleteUserHandler)
 		}
 		// urlsGroup := apiGroup.Group("urls")
 		// {

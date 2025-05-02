@@ -55,3 +55,12 @@ func (p *PostgresUserRepo) CreateUser(userData *models_db.User) (*models_db.User
 
 	return &user, nil
 }
+
+func (p *PostgresTokenRepo) DeleteUser(id uint64) *errsuit.AppError {
+	err := p.DB.Where("id = ?", id).Delete(&models_db.User{}).Error
+	if err != nil {
+		return errsuit.NewInternal("can't delete user", err, true)
+	}
+
+	return nil
+}

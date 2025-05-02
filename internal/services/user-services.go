@@ -42,3 +42,12 @@ func (s UserServices) GetUsers() ([]models_http.UserResponse, error) {
 
 	return users, nil
 }
+
+func (s *UserServices) DeleteUser(id uint64) error {
+	err := s.UserRepo.DeleteUser(id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

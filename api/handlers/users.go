@@ -27,3 +27,13 @@ func (h *Handler) GetUsersHandler(c *gin.Context) {
 
 	c.JSON(200, user)
 }
+
+func (h *Handler) DeleteUserHandler(c *gin.Context) {
+	id, err := GetIdFromContext(c)
+	if ginadap.HandleError(c, err) {
+		return
+	}
+
+	err = h.UserServices.DeleteUser(id)
+
+}
