@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/gin-gonic/gin"
+	models_http "github.com/wrtgvr/urlshrt/internal/models/http"
 	"github.com/wrtgvr2/errsuit/drivers/ginadap"
 )
 
@@ -40,4 +41,24 @@ func (h *Handler) DeleteUserHandler(c *gin.Context) {
 	}
 
 	c.Status(204)
+}
+
+func (h *Handler) PatchUserHandler(c *gin.Context) {
+	id, err := GetIdFromContext(c)
+	if ginadap.HandleError(c, err) {
+		return
+	}
+
+	var userReq models_http.UserPatchRequest
+	err = DecodeBody(c, &userReq)
+	if ginadap.HandleError(c, err) {
+		return
+	}
+
+	updatedUser, err := h.UserServices.PatchUser(id, &userReq)
+	if ginadap.HandleError(c, err) {
+		return
+	}
+
+	c.JSON(200, updatedUser)
 }

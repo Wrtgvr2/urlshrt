@@ -23,7 +23,7 @@ func (p *PostgresUserRepo) getUser(searchField string, fieldValue any) (*models_
 		if res.Error == gorm.ErrRecordNotFound {
 			return nil, errsuit.NewNotFound("user not found", res.Error, false)
 		}
-		return nil, errsuit.NewInternal("DB error", res.Error, true)
+		return nil, errsuit.NewInternal("unable to get user", res.Error, true)
 	}
 
 	return &user, nil
@@ -41,7 +41,7 @@ func (p *PostgresUserRepo) GetAllUsers() ([]models_db.User, *errsuit.AppError) {
 	var users []models_db.User
 	err := p.DB.Find(&users).Error
 	if err != nil {
-		return nil, errsuit.NewInternal("can't get all users", err, true)
+		return nil, errsuit.NewInternal("unable get all users", err, true)
 	}
 	return users, nil
 }
@@ -57,10 +57,21 @@ func (p *PostgresUserRepo) CreateUser(userData *models_db.User) (*models_db.User
 }
 
 func (p *PostgresUserRepo) DeleteUser(id uint64) *errsuit.AppError {
-	err := p.DB.Where("id = ?", id).Delete(&models_db.User{}).Error
-	if err != nil {
-		return errsuit.NewInternal("can't delete user", err, true)
+	res := p.DB.Where("id = ?", id).Delete(&models_db.User{})
+	if res.Error != nil || res.RowsAffected == 0 {
+		if res.Error == gorm.ErrRecordNotFound {
+			return errsuit.NewNotFound("user not found", res.Error, false)
+		}
+		return errsuit.NewInternal("unable to delete user", res.Error, true)
 	}
 
 	return nil
+}
+
+func (p *PostgresUserRepo) UpdateUser(user *models_db.User) (*models_db.User, *errsuit.AppError) {
+	res := p.DB.Save(user)
+	if res.Error != nil {
+		return nil, errsuit.NewInternal("unable to update user", res.Error, false)
+	}
+	return user, nil
 }

@@ -16,9 +16,9 @@ func registerApiRoutes(h *handlers.Handler, r *gin.Engine) {
 		}
 		usersGroup := apiGroup.Group("users")
 		{
-			usersGroup.GET("/:id", h.GetUserHandler)
 			usersGroup.GET("", h.GetUsersHandler)
-			// PATCH {id}
+			usersGroup.GET("/:id", h.GetUserHandler)
+			usersGroup.PATCH("/:id", h.PatchUserHandler)
 			usersGroup.DELETE("/:id", h.DeleteUserHandler)
 		}
 		// urlsGroup := apiGroup.Group("urls")

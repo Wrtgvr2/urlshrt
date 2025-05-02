@@ -12,6 +12,7 @@ type UserRepo interface {
 	CreateUser(*models_db.User) (*models_db.User, *errsuit.AppError)
 	GetAllUsers() ([]models_db.User, *errsuit.AppError)
 	DeleteUser(uint64) *errsuit.AppError
+	UpdateUser(*models_db.User) (*models_db.User, *errsuit.AppError)
 }
 
 type UrlRepo interface{}
