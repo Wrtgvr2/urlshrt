@@ -7,6 +7,7 @@ type URL struct {
 	ShortURL  string `gorm:"not null;uniqueIndex"`
 	UserID    uint64 `gorm:"not null;index"`
 	OrigURL   string `gorm:"type:text;not null"`
+	Revoked   bool   `form:"default:false"`
 	CreatedAt time.Time
 	ExpiresAt *time.Time
 }
