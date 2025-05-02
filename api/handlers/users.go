@@ -35,5 +35,9 @@ func (h *Handler) DeleteUserHandler(c *gin.Context) {
 	}
 
 	err = h.UserServices.DeleteUser(id)
+	if ginadap.HandleError(c, err) {
+		return
+	}
 
+	c.Status(204)
 }
