@@ -15,7 +15,7 @@ func DecodeBody(c *gin.Context, obj any) *errsuit.AppError {
 	return nil
 }
 
-func GetIdFromContext(c *gin.Context) (uint64, error) {
+func GetIdFromContext(c *gin.Context) (uint64, *errsuit.AppError) {
 	idStr := c.Param("id")
 
 	id, err := strconv.ParseUint(idStr, 10, 64)
