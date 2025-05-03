@@ -12,7 +12,7 @@ func registerApiRoutes(h *handlers.Handler, r *gin.Engine) {
 		rGroup := apiGroup.Group("r")
 		{
 			rGroup.GET("/:shrturl", h.RedirectHandler)
-			//rGroup.POST("/shorten", h.ShortenHandler)
+			rGroup.POST("/shorten", h.ShortenHandler)
 		}
 		usersGroup := apiGroup.Group("users")
 		{
@@ -23,7 +23,6 @@ func registerApiRoutes(h *handlers.Handler, r *gin.Engine) {
 		}
 		// urlsGroup := apiGroup.Group("urls")
 		// {
-		//   POST create
 		//   POST regenerate short url with same orig url
 		//   GET all
 		//   GET {id}

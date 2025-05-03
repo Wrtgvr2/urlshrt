@@ -15,12 +15,25 @@ func DecodeBody(c *gin.Context, obj any) *errsuit.AppError {
 	return nil
 }
 
-func GetIdFromContext(c *gin.Context) (uint64, *errsuit.AppError) {
+func GetIdFromContextParam(c *gin.Context) (uint64, *errsuit.AppError) {
 	idStr := c.Param("id")
 
 	id, err := strconv.ParseUint(idStr, 10, 64)
 	if err != nil {
 		return 0, errsuit.NewBadRequest("invalid id", err, false)
+	}
+
+	return id, nil
+}
+
+func GetIdFromContextToken(c *gin.Context) (uint64, *errsuit.AppError) {
+	idAny, exists := c.Get("UserID")
+	if !exists {
+		return 0, errsuit.NewBadRequest("invalid id", nil, false)
+	}
+	id, ok := idAny.(uint64)
+	if !ok {
+		return 0, errsuit.NewBadRequest("invalid id", nil, false)
 	}
 
 	return id, nil

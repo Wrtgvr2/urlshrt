@@ -15,7 +15,9 @@ type UserRepo interface {
 	UpdateUser(*models_db.User) (*models_db.User, *errsuit.AppError)
 }
 
-type UrlRepo interface{}
+type UrlRepo interface {
+	CreateNewShortUrl(urlModel *models_db.URL) (*models_db.URL, *errsuit.AppError)
+}
 
 type TokenRepo interface {
 	CreateRefreshTokenInfo(*models_db.RefreshToken) (*models_db.RefreshToken, *errsuit.AppError)
