@@ -70,3 +70,16 @@ func createRefreshTokenModel(tokenStr string) (*models_db.RefreshToken, *errsuit
 		ExpiresAt: time.Unix(tokenExp, 0),
 	}, nil
 }
+
+func convertUrlDbToUrlResp(u *models_db.URL) *models_http.UrlResponse {
+	return &models_http.UrlResponse{
+		ID:        u.ID,
+		UserID:    u.UserID,
+		ShortURL:  u.ShortURL,
+		OrigURL:   u.OrigURL,
+		Redirects: u.Redirects,
+		Revoked:   u.Revoked,
+		CreatedAt: u.CreatedAt,
+		ExpiresAt: u.ExpiresAt,
+	}
+}
