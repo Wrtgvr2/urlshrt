@@ -30,21 +30,6 @@ func (s UserServices) GetUser(id uint64) (*models_http.UserResponse, *errsuit.Ap
 	return &userRes, nil
 }
 
-func (s UserServices) GetUsers() ([]models_http.UserResponse, *errsuit.AppError) {
-	usersDb, err := s.UserRepo.GetAllUsers()
-	if err != nil {
-		return nil, err
-	}
-
-	users := []models_http.UserResponse{}
-
-	for _, u := range usersDb {
-		users = append(users, *convertUserDbToUserResp(&u))
-	}
-
-	return users, nil
-}
-
 func (s *UserServices) DeleteUser(id uint64) *errsuit.AppError {
 	err := s.UserRepo.DeleteUser(id)
 	if err != nil {

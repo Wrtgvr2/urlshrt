@@ -37,15 +37,6 @@ func (p *PostgresUserRepo) GetUserByUsername(username string) (*models_db.User, 
 	return p.getUser("username", username)
 }
 
-func (p *PostgresUserRepo) GetAllUsers() ([]models_db.User, *errsuit.AppError) {
-	var users []models_db.User
-	err := p.DB.Find(&users).Error
-	if err != nil {
-		return nil, errsuit.NewInternal("unable get all users", err, true)
-	}
-	return users, nil
-}
-
 func (p *PostgresUserRepo) CreateUser(userData *models_db.User) (*models_db.User, *errsuit.AppError) {
 	user := *userData
 	res := p.DB.Select("*").Create(&user)

@@ -16,15 +16,13 @@ func registerApiRoutes(h *handlers.Handler, r *gin.Engine) {
 		}
 		usersGroup := apiGroup.Group("users")
 		{
-			usersGroup.GET("", h.GetUsersHandler)
 			usersGroup.GET("/:id", h.GetUserHandler)
 			usersGroup.PATCH("/:id", h.PatchUserHandler)
 			usersGroup.DELETE("/:id", h.DeleteUserHandler)
 		}
 		// urlsGroup := apiGroup.Group("urls")
 		// {
-		//   POST regenerate short url with same orig url
-		//   GET all
+		//   POST regenerate short url with same orig url (?????)
 		//   GET {id}
 		// }
 	}
