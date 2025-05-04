@@ -16,6 +16,9 @@ type UserRepo interface {
 
 type UrlRepo interface {
 	CreateNewShortUrl(urlModel *models_db.URL) (*models_db.URL, *errsuit.AppError)
+	GetUrlByShortUrl(string) (*models_db.URL, *errsuit.AppError)
+	GetValidUrlByShortUrl(string) (*models_db.URL, *errsuit.AppError)
+	IncrementRedirectCount(*models_db.URL) *errsuit.AppError
 }
 
 type TokenRepo interface {

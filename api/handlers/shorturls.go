@@ -11,9 +11,14 @@ import (
 func (h *Handler) RedirectHandler(c *gin.Context) {
 	shortUrl := c.Param("shrturl")
 
-	url := shortUrl
-	// search for shortUrl in DB if shortUrl exists then get actual url and redirect
-	c.Redirect(http.StatusFound, url)
+	url, err := h.UrlServices.GetValidUrlByShortUrl(shortUrl)
+	if ginadap.HandleError(c, err) {
+		return
+	}
+
+	c.Redirect(http.StatusFound, url.OrigURL)
+
+	err = h.UrlServices.IncrementRedirectCount(url)
 }
 
 func (h *Handler) ShortenHandler(c *gin.Context) {
