@@ -6,15 +6,15 @@ import (
 	"gorm.io/gorm"
 )
 
-type PostgresUlrRepo struct {
+type PostgresUrlRepo struct {
 	DB *gorm.DB
 }
 
-func NewPostgresUrlRepo(db *gorm.DB) *PostgresUlrRepo {
-	return &PostgresUlrRepo{DB: db}
+func NewPostgresUrlRepo(db *gorm.DB) *PostgresUrlRepo {
+	return &PostgresUrlRepo{DB: db}
 }
 
-func (p *PostgresUlrRepo) CreateNewShortUrl(urlModel *models_db.URL) (*models_db.URL, *errsuit.AppError) {
+func (p *PostgresUrlRepo) CreateNewShortUrl(urlModel *models_db.URL) (*models_db.URL, *errsuit.AppError) {
 	res := p.DB.Create(urlModel)
 	if res.Error != nil {
 		return nil, errsuit.NewInternal("unable to create url", res.Error, true)
@@ -22,7 +22,7 @@ func (p *PostgresUlrRepo) CreateNewShortUrl(urlModel *models_db.URL) (*models_db
 	return urlModel, nil
 }
 
-func (p *PostgresUlrRepo) GetUrlByShortUrl(shortUrl string) (*models_db.URL, *errsuit.AppError) {
+func (p *PostgresUrlRepo) GetUrlByShortUrl(shortUrl string) (*models_db.URL, *errsuit.AppError) {
 	var urlModel models_db.URL
 	err := p.DB.Where("short_url = ?", shortUrl).First(&urlModel).Error
 	if err != nil {
@@ -35,7 +35,7 @@ func (p *PostgresUlrRepo) GetUrlByShortUrl(shortUrl string) (*models_db.URL, *er
 	return &urlModel, nil
 }
 
-func (p *PostgresUlrRepo) GetValidUrlByShortUrl(shortUrl string) (*models_db.URL, *errsuit.AppError) {
+func (p *PostgresUrlRepo) GetValidUrlByShortUrl(shortUrl string) (*models_db.URL, *errsuit.AppError) {
 	url, err := p.GetUrlByShortUrl(shortUrl)
 	if err != nil {
 		return nil, err
@@ -48,7 +48,7 @@ func (p *PostgresUlrRepo) GetValidUrlByShortUrl(shortUrl string) (*models_db.URL
 	return url, nil
 }
 
-func (p *PostgresUlrRepo) IncrementRedirectCount(url *models_db.URL) *errsuit.AppError {
+func (p *PostgresUrlRepo) IncrementRedirectCount(url *models_db.URL) *errsuit.AppError {
 	url.Redirects += 1
 	res := p.DB.Save(url)
 	if res.Error != nil {

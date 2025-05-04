@@ -27,14 +27,14 @@ func (s *UrlServices) CreateNewShortUrl(userId uint64, urlReq models_http.UrlReq
 	shortUrl := base62.EncodeToString(hash[:8])
 
 	expirationDate := time.Now().Add(30 * 24 * time.Hour)
-	ulrModel := models_db.URL{
+	urlModel := models_db.URL{
 		UserID:    userId,
 		OrigURL:   urlReq.URL,
 		ShortURL:  shortUrl,
 		ExpiresAt: &expirationDate,
 	}
 
-	createdUrl, err := s.Repo.CreateNewShortUrl(&ulrModel)
+	createdUrl, err := s.Repo.CreateNewShortUrl(&urlModel)
 	if err != nil {
 		return nil, err
 	}
