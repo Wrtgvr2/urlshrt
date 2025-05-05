@@ -1,6 +1,7 @@
 package services
 
 import (
+	"strings"
 	"time"
 
 	models_db "github.com/wrtgvr/urlshrt/internal/models/db"
@@ -26,7 +27,7 @@ func convertUserReqToUserDb(userReq *models_http.UserRequest) (*models_db.User, 
 	}
 
 	userData := models_db.User{
-		Username:     userReq.Username,
+		Username:     strings.ToLower(userReq.Username),
 		PasswordHash: hashedPassword,
 	}
 
