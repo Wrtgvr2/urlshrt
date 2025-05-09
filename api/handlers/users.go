@@ -7,7 +7,7 @@ import (
 )
 
 func (h *Handler) GetUserHandler(c *gin.Context) {
-	id, err := GetIdFromContextParam(c)
+	id, err := GetIdFromContext(c)
 	if ginadap.HandleError(c, err) {
 		return
 	}
@@ -21,7 +21,7 @@ func (h *Handler) GetUserHandler(c *gin.Context) {
 }
 
 func (h *Handler) DeleteUserHandler(c *gin.Context) {
-	id, err := GetIdFromContextParam(c)
+	id, err := GetIdFromContext(c)
 	if ginadap.HandleError(c, err) {
 		return
 	}
@@ -35,7 +35,7 @@ func (h *Handler) DeleteUserHandler(c *gin.Context) {
 }
 
 func (h *Handler) PatchUserHandler(c *gin.Context) {
-	id, err := GetIdFromContextParam(c)
+	id, err := GetIdFromContext(c)
 	if ginadap.HandleError(c, err) {
 		return
 	}
