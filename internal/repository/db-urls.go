@@ -79,3 +79,11 @@ func (p *PostgresUrlRepo) GetUrlById(id uint64) (*models_db.URL, *errsuit.AppErr
 	}
 	return url, nil
 }
+
+func (p *PostgresUrlRepo) GetUrlByUserId(userId uint64) (*models_db.URL, *errsuit.AppError) {
+	url, err := p.getUrl("user_id", userId)
+	if err != nil {
+		return nil, err
+	}
+	return url, nil
+}
