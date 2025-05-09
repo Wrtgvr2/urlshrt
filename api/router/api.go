@@ -23,7 +23,7 @@ func registerApiRoutes(h *handlers.Handler, r *gin.Engine) {
 		urlsGroup := apiGroup.Group("urls")
 		{
 			urlsGroup.GET("", h.GetUserUrlsHandler)
-			urlsGroup.GET(":id", h.GetUrlHandler)
+			urlsGroup.GET("/:id", h.GetUrlHandler)
 		}
 	}
 }
