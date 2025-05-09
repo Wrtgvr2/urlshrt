@@ -51,6 +51,17 @@ func (s *UrlServices) GetValidUrlByShortUrl(url string) (*models_db.URL, *errsui
 	return origUrl, nil
 }
 
+func (s *UrlServices) GetUrlById(id uint64) (*models_http.UrlResponse, *errsuit.AppError) {
+	url, err := s.Repo.GetUrlById(id)
+	if err != nil {
+		return nil, err
+	}
+
+	urlResp := convertUrlDbToUrlResp(url)
+
+	return urlResp, nil
+}
+
 func (s *UrlServices) IncrementRedirectCount(url *models_db.URL) *errsuit.AppError {
 	err := s.Repo.IncrementRedirectCount(url)
 	return err
