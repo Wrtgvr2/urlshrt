@@ -3,7 +3,7 @@ package models_db
 import "time"
 
 type URL struct {
-	ID        uint   `gorm:"primaryKey"`
+	ID        uint64 `gorm:"primaryKey"`
 	UserID    uint64 `gorm:"not null;index"`
 	ShortURL  string `gorm:"not null;uniqueIndex"`
 	OrigURL   string `gorm:"type:text;not null"`
