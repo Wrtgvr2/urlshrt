@@ -34,29 +34,39 @@ func (s *UrlServices) CreateNewShortUrl(userId uint64, urlReq models_http.UrlReq
 		ExpiresAt: &expirationDate,
 	}
 
-	createdUrl, err := s.Repo.CreateNewShortUrl(&urlModel)
-	if err != nil {
-		return nil, err
+	createdUrl, appErr := s.Repo.CreateNewShortUrl(&urlModel)
+	if appErr != nil {
+		return nil, appErr
 	}
 
 	return convertUrlDbToUrlResp(createdUrl), nil
 }
 
 func (s *UrlServices) GetValidUrlByShortUrl(url string) (*models_db.URL, *errsuit.AppError) {
-	origUrl, err := s.Repo.GetValidUrlByShortUrl(url)
-	if err != nil {
-		return nil, err
+	origUrl, appErr := s.Repo.GetValidUrlByShortUrl(url)
+	if appErr != nil {
+		return nil, appErr
 	}
 
 	return origUrl, nil
 }
 
 func (s *UrlServices) GetUrlById(id uint64) (*models_http.UrlResponse, *errsuit.AppError) {
-	url, err := s.Repo.GetUrlById(id)
-	if err != nil {
-		return nil, err
+	url, appErr := s.Repo.GetUrlById(id)
+	if appErr != nil {
+		return nil, appErr
 	}
 
+	urlResp := convertUrlDbToUrlResp(url)
+
+	return urlResp, nil
+}
+
+func (s *UrlServices) GetUrlByUserId(id uint64) (*models_http.UrlResponse, *errsuit.AppError) {
+	url, appErr := s.Repo.GetUrlByUserId(id)
+	if appErr != nil {
+		return nil, appErr
+	}
 	urlResp := convertUrlDbToUrlResp(url)
 
 	return urlResp, nil
