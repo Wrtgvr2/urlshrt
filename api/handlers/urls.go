@@ -18,3 +18,17 @@ func (h *Handler) GetUrlHandler(c *gin.Context) {
 
 	c.JSON(200, url)
 }
+
+func (h *Handler) GetUserUrlsHandler(c *gin.Context) {
+	id, appErr := GetIdFromContext(c)
+	if ginadap.HandleError(c, appErr) {
+		return
+	}
+
+	url, appErr := h.UrlServices.GetUrlByUserId(id)
+	if ginadap.HandleError(c, appErr) {
+		return
+	}
+
+	c.JSON(200, url)
+}

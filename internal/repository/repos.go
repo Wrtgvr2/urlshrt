@@ -15,12 +15,13 @@ type UserRepo interface {
 }
 
 type UrlRepo interface {
-	CreateNewShortUrl(urlModel *models_db.URL) (*models_db.URL, *errsuit.AppError)
+	CreateNewShortUrl(*models_db.URL) (*models_db.URL, *errsuit.AppError)
 	GetUrlByShortUrl(string) (*models_db.URL, *errsuit.AppError)
 	GetValidUrlByShortUrl(string) (*models_db.URL, *errsuit.AppError)
 	IncrementRedirectCount(*models_db.URL) *errsuit.AppError
 	GetUrlById(uint64) (*models_db.URL, *errsuit.AppError)
-	getUrl(searchField string, fieldValue any) (*models_db.URL, *errsuit.AppError)
+	getUrl(string, any) (*models_db.URL, *errsuit.AppError)
+	GetUrlByUserId(uint64) (*models_db.URL, *errsuit.AppError)
 }
 
 type TokenRepo interface {
