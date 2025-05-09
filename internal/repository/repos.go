@@ -19,6 +19,8 @@ type UrlRepo interface {
 	GetUrlByShortUrl(string) (*models_db.URL, *errsuit.AppError)
 	GetValidUrlByShortUrl(string) (*models_db.URL, *errsuit.AppError)
 	IncrementRedirectCount(*models_db.URL) *errsuit.AppError
+	GetUrlById(uint64) (*models_db.URL, *errsuit.AppError)
+	getUrl(searchField string, fieldValue any) (*models_db.URL, *errsuit.AppError)
 }
 
 type TokenRepo interface {

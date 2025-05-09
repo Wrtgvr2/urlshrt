@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"fmt"
+
 	models_db "github.com/wrtgvr/urlshrt/internal/models/db"
 	"github.com/wrtgvr2/errsuit"
 	"gorm.io/gorm"
@@ -22,17 +24,25 @@ func (p *PostgresUrlRepo) CreateNewShortUrl(urlModel *models_db.URL) (*models_db
 	return urlModel, nil
 }
 
-func (p *PostgresUrlRepo) GetUrlByShortUrl(shortUrl string) (*models_db.URL, *errsuit.AppError) {
-	var urlModel models_db.URL
-	err := p.DB.Where("short_url = ?", shortUrl).First(&urlModel).Error
-	if err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return nil, errsuit.NewNotFound("short url not found", err, false)
+func (p *PostgresUrlRepo) getUrl(searchField string, fieldValue any) (*models_db.URL, *errsuit.AppError) {
+	var url models_db.URL
+	res := p.DB.First(&url, fmt.Sprintf("%s = ?", searchField), fieldValue)
+	if res.Error != nil {
+		if res.Error == gorm.ErrRecordNotFound {
+			return nil, errsuit.NewNotFound("url not found", res.Error, false)
 		}
-		return nil, errsuit.NewInternal("unable to get orig url", err, true)
+		return nil, errsuit.NewInternal("unable to get url", res.Error, true)
 	}
 
-	return &urlModel, nil
+	return &url, nil
+}
+
+func (p *PostgresUrlRepo) GetUrlByShortUrl(shortUrl string) (*models_db.URL, *errsuit.AppError) {
+	url, err := p.getUrl("short_url", shortUrl)
+	if err != nil {
+		return nil, err
+	}
+	return url, nil
 }
 
 func (p *PostgresUrlRepo) GetValidUrlByShortUrl(shortUrl string) (*models_db.URL, *errsuit.AppError) {
@@ -42,7 +52,8 @@ func (p *PostgresUrlRepo) GetValidUrlByShortUrl(shortUrl string) (*models_db.URL
 	}
 
 	if url.Revoked {
-		// Return "Not Found" error cuz there is no sense to say user "Hey, this link is revoked" let user think there is no url
+		// Return "Not Found" error cuz there is no sense to say user "Hey, this link is revoked"
+		// let user (not like user-user, user as guy who just click a link) think there is no url
 		return nil, errsuit.NewNotFound("short url not found", err, false)
 	}
 	return url, nil
@@ -59,4 +70,12 @@ func (p *PostgresUrlRepo) IncrementRedirectCount(url *models_db.URL) *errsuit.Ap
 	}
 
 	return nil
+}
+
+func (p *PostgresUrlRepo) GetUrlById(id uint64) (*models_db.URL, *errsuit.AppError) {
+	url, err := p.getUrl("id", id)
+	if err != nil {
+		return nil, err
+	}
+	return url, nil
 }
