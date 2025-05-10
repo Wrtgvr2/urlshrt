@@ -8,12 +8,9 @@ import (
 
 func registerApiRoutes(h *handlers.Handler, r *gin.Engine) {
 	apiGroup := r.Group("api", middleware.AuthMiddleware())
+
+	apiGroup.POST("/shorten", h.ShortenHandler)
 	{
-		rGroup := apiGroup.Group("r")
-		{
-			rGroup.GET("/:shrturl", h.RedirectHandler)
-			rGroup.POST("/shorten", h.ShortenHandler)
-		}
 		usersGroup := apiGroup.Group("users")
 		{
 			usersGroup.GET("", h.GetUserHandler)
@@ -24,6 +21,7 @@ func registerApiRoutes(h *handlers.Handler, r *gin.Engine) {
 		{
 			urlsGroup.GET("", h.GetUserUrlsHandler)
 			urlsGroup.GET("/:id", h.GetUrlHandler)
+			urlsGroup.DELETE(":id", h.DeleteUrlHandler)
 		}
 	}
 }
