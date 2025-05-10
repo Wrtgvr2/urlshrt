@@ -32,7 +32,7 @@ func convertUserReqToUserDb(userReq *models_http.UserRequest) (*models_db.User, 
 	}
 
 	if userReq.DisplayUsername != nil {
-		userData.DisplayUsername = userReq.Username
+		userData.DisplayUsername = strings.ToLower(userReq.Username)
 	} else {
 		userData.DisplayUsername = userData.Username
 	}
