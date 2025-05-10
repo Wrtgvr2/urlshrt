@@ -62,7 +62,10 @@ func (p *PostgresUserRepo) DeleteUser(id uint64) *errsuit.AppError {
 func (p *PostgresUserRepo) UpdateUser(user *models_db.User) (*models_db.User, *errsuit.AppError) {
 	res := p.DB.Save(user)
 	if res.Error != nil {
-		return nil, errsuit.NewInternal("unable to update user", res.Error, false)
+		if res.Error == gorm.ErrRecordNotFound {
+			return nil, errsuit.NewNotFound("user not found", res.Error, false)
+		}
+		return nil, errsuit.NewInternal("unable to update user", res.Error, true)
 	}
 	return user, nil
 }
