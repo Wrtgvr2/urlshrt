@@ -10,6 +10,7 @@ func RegisterRoutes(h *handlers.Handler) *gin.Engine {
 
 	registerApiRoutes(h, r)
 	registerAuthRouter(h, r)
+	registerRedirectRoutes(h, r)
 
 	return r
 }
