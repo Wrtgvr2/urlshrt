@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	models_http "github.com/wrtgvr/urlshrt/internal/models/http"
+	"github.com/wrtgvr2/errsuit"
 	"github.com/wrtgvr2/errsuit/drivers/ginadap"
 )
 
@@ -19,6 +20,7 @@ func (h *Handler) RedirectHandler(c *gin.Context) {
 	c.Redirect(http.StatusFound, url.OrigURL)
 
 	err = h.UrlServices.IncrementRedirectCount(url)
+	errsuit.AsAppError(err).LogError()
 }
 
 func (h *Handler) ShortenHandler(c *gin.Context) {
