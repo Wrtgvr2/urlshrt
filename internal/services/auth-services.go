@@ -1,7 +1,8 @@
 package services
 
 import (
-	models_db "github.com/wrtgvr/urlshrt/internal/models/db"
+	"strings"
+
 	models_http "github.com/wrtgvr/urlshrt/internal/models/http"
 	rep "github.com/wrtgvr/urlshrt/internal/repository"
 	"github.com/wrtgvr/urlshrt/pkg/hash"
@@ -54,12 +55,12 @@ func (s *AuthServices) Login(userReq *models_http.UserRequest) (string, string, 
 	return accessToken, refreshToken, nil
 }
 
-func (s *AuthServices) Register(userReq *models_http.UserRequest) (*models_db.User, *errsuit.AppError) {
+func (s *AuthServices) Register(userReq *models_http.UserRequest) (*models_http.UserResponse, *errsuit.AppError) {
 	err := validateUserData(userReq.Username, userReq.Password)
 	if err != nil {
 		return nil, err
 	}
-	user, appErr := s.UserRepo.GetUserByUsername(userReq.Username)
+	user, appErr := s.UserRepo.GetUserByUsername(strings.ToLower(userReq.Username))
 	if appErr != nil && appErr.Type != errsuit.TypeNotFound {
 		return nil, appErr
 	}
@@ -77,5 +78,7 @@ func (s *AuthServices) Register(userReq *models_http.UserRequest) (*models_db.Us
 		return nil, appErr
 	}
 
-	return createdUser, nil
+	userResp := convertUserDbToUserResp(createdUser)
+
+	return userResp, nil
 }

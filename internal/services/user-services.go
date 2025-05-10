@@ -1,6 +1,8 @@
 package services
 
 import (
+	"strings"
+
 	models_http "github.com/wrtgvr/urlshrt/internal/models/http"
 	rep "github.com/wrtgvr/urlshrt/internal/repository"
 	"github.com/wrtgvr/urlshrt/pkg/hash"
@@ -40,7 +42,7 @@ func (s *UserServices) DeleteUser(id uint64) *errsuit.AppError {
 }
 
 func (s *UserServices) PatchUser(id uint64, userReq *models_http.UserPatchRequest) (*models_http.UserResponse, *errsuit.AppError) {
-	existingUser, err := s.UserRepo.GetUserByUsername(*userReq.Username)
+	existingUser, err := s.UserRepo.GetUserByUsername(strings.ToLower(*userReq.Username))
 	if err != nil && err.Type != errsuit.TypeNotFound {
 		return nil, err
 	}
@@ -56,7 +58,7 @@ func (s *UserServices) PatchUser(id uint64, userReq *models_http.UserPatchReques
 	}
 
 	if userReq.Username != nil {
-		user.Username = *userReq.Username
+		user.Username = strings.ToLower(*userReq.Username)
 	}
 	if userReq.DisplayUsername != nil {
 		user.DisplayUsername = *userReq.DisplayUsername
