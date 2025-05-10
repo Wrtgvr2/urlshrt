@@ -22,6 +22,8 @@ type UrlRepo interface {
 	GetUrlById(uint64) (*models_db.URL, *errsuit.AppError)
 	getUrl(string, any) (*models_db.URL, *errsuit.AppError)
 	GetUrlByUserId(uint64) (*models_db.URL, *errsuit.AppError)
+	DeleteUrl(uint64) *errsuit.AppError
+	GetUserUrls(uint64) ([]models_db.URL, *errsuit.AppError)
 }
 
 type TokenRepo interface {

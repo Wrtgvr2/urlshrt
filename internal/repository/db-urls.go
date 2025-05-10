@@ -87,3 +87,25 @@ func (p *PostgresUrlRepo) GetUrlByUserId(userId uint64) (*models_db.URL, *errsui
 	}
 	return url, nil
 }
+
+func (p *PostgresUrlRepo) DeleteUrl(id uint64) *errsuit.AppError {
+	res := p.DB.Delete(&models_db.URL{}, id)
+	if res.Error != nil || res.RowsAffected == 0 {
+		if res.Error == gorm.ErrRecordNotFound {
+			return errsuit.NewNotFound("url not found", res.Error, false)
+		}
+		return errsuit.NewInternal("unable to delete url", res.Error, true)
+	}
+
+	return nil
+}
+
+func (p *PostgresUrlRepo) GetUserUrls(userId uint64) ([]models_db.URL, *errsuit.AppError) {
+	var urls []models_db.URL
+	res := p.DB.Where("user_id = ?", userId).Find(&urls)
+	if res.Error != nil {
+		return nil, errsuit.NewInternal("unable to get user urls", res.Error, true)
+	}
+
+	return urls, nil
+}

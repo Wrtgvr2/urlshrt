@@ -76,3 +76,22 @@ func (s *UrlServices) IncrementRedirectCount(url *models_db.URL) *errsuit.AppErr
 	err := s.Repo.IncrementRedirectCount(url)
 	return err
 }
+
+func (s *UrlServices) DeleteUrl(id uint64) *errsuit.AppError {
+	err := s.Repo.DeleteUrl(id)
+	return err
+}
+
+func (s *UrlServices) GetUserUrls(userId uint64) ([]models_http.UrlResponse, *errsuit.AppError) {
+	urls, appErr := s.Repo.GetUserUrls(userId)
+	if appErr != nil {
+		return nil, appErr
+	}
+
+	urlsResp := []models_http.UrlResponse{}
+	for _, url := range urls {
+		urlsResp = append(urlsResp, *convertUrlDbToUrlResp(&url))
+	}
+
+	return urlsResp, nil
+}
