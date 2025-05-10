@@ -25,10 +25,24 @@ func (h *Handler) GetUserUrlsHandler(c *gin.Context) {
 		return
 	}
 
-	url, appErr := h.UrlServices.GetUrlByUserId(id)
+	url, appErr := h.UrlServices.GetUserUrls(id)
 	if ginadap.HandleError(c, appErr) {
 		return
 	}
 
 	c.JSON(200, url)
+}
+
+func (h *Handler) DeleteUrlHandler(c *gin.Context) {
+	id, appErr := GetIdFromContextParam(c)
+	if ginadap.HandleError(c, appErr) {
+		return
+	}
+
+	appErr = h.UrlServices.DeleteUrl(id)
+	if ginadap.HandleError(c, appErr) {
+		return
+	}
+
+	c.Status(204)
 }
