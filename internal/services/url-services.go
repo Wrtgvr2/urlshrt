@@ -22,7 +22,7 @@ func NewUrlServices(repo rep.UrlRepo) UrlServices {
 }
 
 func (s *UrlServices) CreateNewShortUrl(userId uint64, urlReq models_http.UrlRequest) (*models_http.UrlResponse, *errsuit.AppError) {
-	salt := urlReq.URL + fmt.Sprintf("%d%d%s", userId, time.Now().UnixNano(), os.Getenv("URL_ULTRA_SECRET_EXTRA_SALT"))
+	salt := urlReq.URL + fmt.Sprintf("%d%d%s", userId, time.Now().UnixNano(), os.Getenv("URL_SECRET_SALT"))
 	hash := sha1.Sum([]byte(salt))
 	shortUrl := base62.EncodeToString(hash[:8])
 
