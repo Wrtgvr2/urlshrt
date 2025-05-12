@@ -26,7 +26,7 @@ func GetIdFromContextParam(c *gin.Context) (uint64, *errsuit.AppError) {
 	return id, nil
 }
 
-func GetIdFromContext(c *gin.Context) (uint64, *errsuit.AppError) {
+func GetUserIdFromContext(c *gin.Context) (uint64, *errsuit.AppError) {
 	idAny, exists := c.Get("UserID")
 	if !exists {
 		return 0, errsuit.NewBadRequest("invalid id", nil, false)

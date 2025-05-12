@@ -20,7 +20,7 @@ func (h *Handler) GetUrlHandler(c *gin.Context) {
 }
 
 func (h *Handler) GetUserUrlsHandler(c *gin.Context) {
-	id, appErr := GetIdFromContext(c)
+	id, appErr := GetUserIdFromContext(c)
 	if ginadap.HandleError(c, appErr) {
 		return
 	}

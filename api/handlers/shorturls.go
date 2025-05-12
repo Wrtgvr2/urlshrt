@@ -30,7 +30,7 @@ func (h *Handler) ShortenHandler(c *gin.Context) {
 		return
 	}
 
-	id, err := GetIdFromContext(c)
+	id, err := GetUserIdFromContext(c)
 	if ginadap.HandleError(c, err) {
 		return
 	}
