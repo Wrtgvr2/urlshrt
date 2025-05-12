@@ -6,12 +6,15 @@ import (
 )
 
 func (h *Handler) GetUrlHandler(c *gin.Context) {
-	id, appErr := GetIdFromContextParam(c)
+	urlId, appErr := GetIdFromContextParam(c)
 	if ginadap.HandleError(c, appErr) {
 		return
 	}
-
-	url, appErr := h.UrlServices.GetUrlById(id)
+	userId, appErr := GetUserIdFromContext(c)
+	if ginadap.HandleError(c, appErr) {
+		return
+	}
+	url, appErr := h.UrlServices.GetUrlById(userId, urlId)
 	if ginadap.HandleError(c, appErr) {
 		return
 	}

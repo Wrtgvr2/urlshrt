@@ -51,10 +51,14 @@ func (s *UrlServices) GetValidUrlByShortUrl(url string) (*models_db.URL, *errsui
 	return origUrl, nil
 }
 
-func (s *UrlServices) GetUrlById(id uint64) (*models_http.UrlResponse, *errsuit.AppError) {
-	url, appErr := s.Repo.GetUrlById(id)
+// Accept user id and url id
+func (s *UrlServices) GetUrlById(userId, urlId uint64) (*models_http.UrlResponse, *errsuit.AppError) {
+	url, appErr := s.Repo.GetUrlById(urlId)
 	if appErr != nil {
 		return nil, appErr
+	}
+	if url.UserID != userId {
+		return nil, errsuit.NewForbidden("you do not have permission to perform this action", nil, true)
 	}
 
 	urlResp := convertUrlDbToUrlResp(url)
