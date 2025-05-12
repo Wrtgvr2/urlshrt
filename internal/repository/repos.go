@@ -36,4 +36,5 @@ type TokenRepo interface {
 
 type TokensCleanupRepo interface {
 	DeleteTooOldTokens() (int64, error)
+	RevokeExpiredTokens() (int64, error)
 }

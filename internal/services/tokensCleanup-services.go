@@ -23,3 +23,12 @@ func (s *TokensCleanupServices) CleanOldTokens() (int64, error) {
 
 	return deletedRows, nil
 }
+
+func (s *TokensCleanupServices) RevokeExpiredTokens() (int64, error) {
+	revokedRows, err := s.Repo.RevokeExpiredTokens()
+	if err != nil {
+		return 0, err
+	}
+
+	return revokedRows, nil
+}
