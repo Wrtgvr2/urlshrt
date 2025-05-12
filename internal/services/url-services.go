@@ -77,8 +77,17 @@ func (s *UrlServices) IncrementRedirectCount(url *models_db.URL) *errsuit.AppErr
 	return err
 }
 
-func (s *UrlServices) DeleteUrl(id uint64) *errsuit.AppError {
-	err := s.Repo.DeleteUrl(id)
+// Accep user id and url id
+func (s *UrlServices) DeleteUrl(userId, urlId uint64) *errsuit.AppError {
+	url, appErr := s.Repo.GetUrlById(urlId)
+	if appErr != nil {
+		return appErr
+	}
+	if url.UserID != userId {
+		return errsuit.NewForbidden("you do not have permission to perform this action", nil, true)
+	}
+
+	err := s.Repo.DeleteUrl(urlId)
 	return err
 }
 

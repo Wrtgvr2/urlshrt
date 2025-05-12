@@ -34,12 +34,16 @@ func (h *Handler) GetUserUrlsHandler(c *gin.Context) {
 }
 
 func (h *Handler) DeleteUrlHandler(c *gin.Context) {
-	id, appErr := GetIdFromContextParam(c)
+	urlId, appErr := GetIdFromContextParam(c)
+	if ginadap.HandleError(c, appErr) {
+		return
+	}
+	userId, appErr := GetUserIdFromContext(c)
 	if ginadap.HandleError(c, appErr) {
 		return
 	}
 
-	appErr = h.UrlServices.DeleteUrl(id)
+	appErr = h.UrlServices.DeleteUrl(userId, urlId)
 	if ginadap.HandleError(c, appErr) {
 		return
 	}
