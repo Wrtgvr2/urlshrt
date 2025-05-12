@@ -52,13 +52,10 @@ go run ./cmd/tokensCleaner
 | POST   | /auth/login       | User login                           | Response with JWT tokens | No            |
 | POST   | /auth/register    | User registration                    | Response with user model | No            |
 | POST   | /auth/refresh     | Refresh JWT tokens                   | Response with JWT tokens | Yes           |
-|--------------------------------------------------------------------------------------------------------------|
 | GET    | /r/{ShortURL}     | Redirect to orig URL                 | -                        | No            |
-|--------------------------------------------------------------------------------------------------------------|
 | GET    | /api/users        | Get loged user info                  | Response with user model | Yes           |
 | PATCH  | /api/users        | Update loged user info               | Response with user model | Yes           |
 | DELETE | /api/users        | Delete user from DB                  | Status code only         | Yes           |
-|--------------------------------------------------------------------------------------------------------------|
 | GET    | /api/urls         | Get all loged user's short URLs      | Response with url models | Yes           |
 | GET    | /api/urls/{URLid} | Get loged user url with given url id | Response with url model  | Yes           |
 | DELETE | /api/urls/{URLid} | Delete url with given url id         | Status code only         | Yes           |
