@@ -59,4 +59,3 @@ go run ./cmd/tokensCleaner
 | GET    | /api/urls         | Get all loged user's short URLs      | Response with url models | Yes           |
 | GET    | /api/urls/{URLid} | Get loged user url with given url id | Response with url model  | Yes           |
 | DELETE | /api/urls/{URLid} | Delete url with given url id         | Status code only         | Yes           |
-|--------|-------------------|--------------------------------------|--------------------------|---------------|
