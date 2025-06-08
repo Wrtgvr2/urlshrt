@@ -21,7 +21,7 @@ func registerApiRoutes(h *handlers.Handler, r *gin.Engine) {
 		{
 			urlsGroup.GET("", h.GetUserUrlsHandler)
 			urlsGroup.GET("/:id", h.GetUrlHandler)
-			urlsGroup.DELETE(":id", h.DeleteUrlHandler)
+			urlsGroup.DELETE("/:id", h.DeleteUrlHandler)
 		}
 	}
 }
